@@ -9,10 +9,9 @@ abstract class AuthRepo{
 
   Future<Either<Failuer , bool>> login(String email , String pass);
   Future<Either<Failuer , bool>> register({
-    required firstName,
-    required lastName,
-    required password,
-    required email,
-    required File? avatar
+    required String name,
+    required String password,
+    required String passwordConfirm,
+    required String email,
   });
 }

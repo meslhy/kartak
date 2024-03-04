@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/domain/di/di.dart';
+import 'package:graduation_project/shared_locale/helper.dart';
 import 'package:graduation_project/ui/screens/auth/login/login_view_model.dart';
-import 'package:graduation_project/ui/screens/auth/login/widgets/all_widgets.dart';
+import 'package:graduation_project/ui/screens/auth/widgets/all_widgets.dart';
 
 import '../../../utils/app_colors.dart';
 import '../../../utils/base_request_states.dart';
@@ -76,25 +77,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     "Welcome back !",
                     style: TextStyle(
                         fontSize: 24,
-                        // color:settingsProvider.isDarkEnabled()? AppColors.white:AppColors.black,
+                        color:AppColors.white,
                         fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
 
-                textFF(labelText: "email" , controller: viewModel.emailController ),
+                textFF(labelText: "email" , controller: viewModel.emailController,isShown: false),
                 const SizedBox(
                   height: 20,
                 ),
                 textFF(
                   controller: viewModel.passController,
-                  labelText: "Password" ,
-                  isPass: true,
+                  labelText: "........" ,
                   isShown: viewModel.isPass,
-                  icon: IconButton(onPressed: (){
+                  isPass: true,
+                  icon: IconButton(
+                      onPressed: (){
+                        viewModel.isPass =!viewModel.isPass;
                     viewModel.icon = viewModel.isPass ? Icons.remove_red_eye_outlined : Icons.remove_outlined ;
                     setState(() {});
-                    viewModel.isPass =!viewModel.isPass;
                   }, icon: Icon(viewModel.icon)),
                 ),
                 const SizedBox(
@@ -102,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    SharedPreferenceGlobal.putData(key: "lastIndex", data: 0);
                    viewModel.login();
                   },
                   style: ButtonStyle(

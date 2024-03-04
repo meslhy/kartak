@@ -1,6 +1,8 @@
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreference
+@injectable
+class SharedPreferenceGlobal
 {
   static late  SharedPreferences sharedPreferences;
 
@@ -10,37 +12,19 @@ class SharedPreference
     sharedPreferences =await SharedPreferences.getInstance();
   }
 
-  static Future<bool> putData({
-    required String key,
-    required String user
-  })
-  async{
-    return await sharedPreferences.setString(key, user);
+  static Future<bool> putData({required String key, required int data}) async{
+    return await sharedPreferences.setInt(key, data);
   }
 
-  static Future<bool> putDataBool({
-    required String key,
-    required bool value
-  })
-  async{
+  static Future<bool> putDataBool({required String key, required bool value}) async{
     return await sharedPreferences.setBool(key, value);
   }
 
-   static String getData(
-      {
-        required String key
-      }
-      )
-  {
-    return  sharedPreferences.getString(key)??"";
+   static int? getData({required String key}) {
+    return  sharedPreferences.getInt(key);
   }
 
-  static bool getDataBool(
-      {
-        required String key
-      }
-      )
-  {
+  static bool getDataBool({required String key}) {
     return  sharedPreferences.getBool(key) ?? false;
   }
 

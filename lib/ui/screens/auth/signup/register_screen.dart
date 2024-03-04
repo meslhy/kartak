@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_project/shared_locale/helper.dart';
 import 'package:graduation_project/ui/screens/auth/signup/register_view_model.dart';
 import 'package:graduation_project/ui/utils/app_assets.dart';
 import 'package:graduation_project/ui/utils/app_colors.dart';
@@ -48,24 +49,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           padding: const EdgeInsets.only(left: 20.0,right: 20,top: 80),
           child: Column(
             children: [
-              BlocBuilder(
-                  bloc: viewModel,
-                  builder: (context, state) {
-                    if(viewModel.isImageSelected) {
-                      return CircleAvatar(
-                        backgroundImage: FileImage(viewModel.pickedImage!),
-                        radius: 100,
-                      );
-                    }else{
-                      return const  CircleAvatar(
-                    backgroundImage: AssetImage(AppAssets.unknown),
-                    radius: 100,
-                    );
-                    }
-                  },
-              ),
-
-
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -76,13 +59,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
 
                         children: [
-                          FormLabelWidget(label: 'first Name'),
+                          FormLabelWidget(label: 'your Name'),
                           const SizedBox(
                             height: 18,
                           ),
                           CustomTextFormField(
                               hintText: 'enter your first name',
-                              controller: viewModel.firstName,
+                              controller: viewModel.name,
                               validator: (text) {
                                 if (text == null || text.trim().isEmpty) {
                                   return 'Please enter first Name';
@@ -90,23 +73,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 return null;
                               },
                               type: TextInputType.name),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          FormLabelWidget(label: 'last Name'),
-                          const SizedBox(
-                            height: 18,
-                          ),
-                          CustomTextFormField(
-                              hintText: 'enter your last name',
-                              controller: viewModel.lastName,
-                              validator: (text) {
-                                if (text == null || text.trim().isEmpty) {
-                                  return 'Please enter last Name';
-                                }
-                                return null;
-                              },
-                              type: TextInputType.emailAddress),
                           const SizedBox(
                             height: 20,
                           ),
@@ -162,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           CustomTextFormField(
                             hintText: 're-enter your password confirmation',
-                            controller: viewModel.rePassController,
+                            controller: viewModel.passwordConfirm,
                             validator: (text) {
                               if (text == null || text.trim().isEmpty) {
                                 return 'Please re-enter password ';
@@ -181,6 +147,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           CustomButtonWidget(
                               title: 'Sign Up',
                               onPressed: () {
+                                SharedPreferenceGlobal.putData(key: "lastIndex", data: 0);
                                 viewModel.register();
                               })
                         ],
@@ -192,9 +159,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(onPressed: (){
-          viewModel.getImage();
-        }),
       ),
     );
   }

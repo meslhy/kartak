@@ -1,13 +1,13 @@
 import 'dart:convert';
-
-import 'package:graduation_project/data/model/responses/loginResponse.dart';
+import 'package:graduation_project/data/model/responses/auth_responses/auth_response.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @injectable
 class SharedPrefsUtils {
 
-  saveUser(UserData user) async {
+
+  saveUser(AuthResponse user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("user", jsonEncode(user.toJson()));
   }
@@ -18,11 +18,11 @@ class SharedPrefsUtils {
 
   }
 
-  Future<UserData?> getUser() async {
+  Future<AuthResponse?> getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userAsString = prefs.getString("user");
     if (userAsString == null) return null;
-    return UserData.fromJson(jsonDecode(userAsString));
+    return AuthResponse.fromJson(jsonDecode(userAsString));
   }
 
   Future<String?> getToken()async{

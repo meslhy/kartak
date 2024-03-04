@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_project/data/model/responses/auth_responses/auth_response.dart';
 import 'package:graduation_project/domain/di/di.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/home_view_model.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
@@ -46,38 +48,32 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildAppBar(BuildContext context)=>Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-              "Wallet",
-            style: Theme.of(context).textTheme.labelLarge,
-          ),
-          Text(
-              "Active",
-            style: Theme.of(context).textTheme.labelMedium,
-          ),
-        ],
+      BlocBuilder(
+        bloc: viewModel,
+        builder: (context, state) {
+          if(state is BaseRequestSuccessState){
+            AuthResponse data = state.data;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Hello,${data.data?.name??""}",
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                Text(
+                  data.data?.role??"",
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight:FontWeight.bold,fontSize: 14),
+                ),
+              ],
+            );
+          }else{
+            return Text(
+              "Hello,",
+              style: Theme.of(context).textTheme.labelLarge,
+            );
+          }
+        },
       ),
-       BlocBuilder(
-         bloc: viewModel,
-         builder: (context, state) {
-           print(state);
-           if(state is BaseRequestSuccessState){
-
-           return CircleAvatar(
-             radius: 28,
-             backgroundImage: NetworkImage("https://kartak-demo-m6vj.onrender.com/uploads/${state.data.avatar}"??""),
-           );
-           }else{
-             return const CircleAvatar(
-               radius: 28,
-               backgroundColor: AppColors.black,
-             );
-           }
-
-         },
-       ),
     ],
   );
 

@@ -12,12 +12,11 @@ class RegisterUseCase {
   RegisterUseCase(this.repo);
 
   Future<Either<Failuer , bool>> execute({
-    required firstName,
-    required lastName,
+    required name,
     required password,
     required email,
-    required File? avatar,
+    required passwordConfirm,
   } ){
-    return repo.register(firstName: firstName,lastName: lastName,email: email,password: password,avatar:avatar);
+    return repo.register(name: name,email: email,password: password,passwordConfirm:passwordConfirm);
   }
 }

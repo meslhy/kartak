@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import 'package:graduation_project/data/model/responses/loginResponse.dart';
+import 'package:graduation_project/data/model/responses/auth_responses/auth_response.dart';
+import 'package:graduation_project/data/model/responses/auth_responses/errors.dart';
 import 'package:graduation_project/ui/utils/end_points.dart';
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
@@ -46,14 +46,13 @@ class AuthRepoImpl extends AuthRepo {
       print(serverResponse.body);
 
 
-      LoginResponse authResponse = LoginResponse.fromJson(
+      AuthResponse authResponse = AuthResponse.fromJson(
           jsonDecode(serverResponse.body));
 
             if (serverResponse.statusCode >= 200 &&
           serverResponse.statusCode < 300) {
-        sharedPrefsUtils.saveUser(authResponse.data!.userData!);
-        sharedPrefsUtils.saveToken(authResponse.data!.token!);
-        //print(await sharedPrefsUtils.getToken());
+        sharedPrefsUtils.saveUser(authResponse);
+        sharedPrefsUtils.saveToken(authResponse.token!);
         return const Right(true);
       } else {
 
@@ -72,64 +71,50 @@ class AuthRepoImpl extends AuthRepo {
   }
 
 
-
-
-
-
-
-
   @override
   Future<Either<Failuer, bool>> register({
-    required firstName,
-    required lastName,
-    required password,
-    required email,
-    required avatar
+    required String name,
+    required String password,
+    required String passwordConfirm,
+    required String email,
 }) async {
+
+    final body = jsonEncode({
+      "name":name,
+      "email":email,
+      "password":password,
+      "passwordConfirm":passwordConfirm,
+    });
+
     final connectivityResult = await (connectivity.checkConnectivity());
     if(connectivityResult ==ConnectivityResult.wifi ||connectivityResult ==ConnectivityResult.mobile){
       try {
-        var formData = MultipartRequest('POST', Uri.parse("https://kartak-demo-m6vj.onrender.com/api/users/register"));
-        formData.fields.addAll({
-          'firstName': firstName,
-          'lastName': lastName,
-          'password': password,
-          'email': email,
-          'role': 'USER',
-        });
+        Uri url = Uri.https(EndPoints.baseUrl,EndPoints.register);
 
-        formData.files.add( MultipartFile(
-          'avatar',
-          avatar!.readAsBytes().asStream(),
-          avatar.lengthSync(),
-          filename: avatar.path.split("/").last,
-          contentType: MediaType('image', 'png'),
-        ));
+        Response serverResponse = await post(
+            url,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: body
+        );
 
-        print(formData.fields);
+        AuthResponse response = AuthResponse.fromJson(jsonDecode(serverResponse.body));
+        Errors responseError = Errors.fromJson(jsonDecode(serverResponse.body));
 
-        Response serverResponse = await Response.fromStream(await formData.send());
-        // Response serverResponse = await post(url, body: {
-        //   "firstName": body.firstName,
-        //   "lastName": body.lastName,
-        //   "password": "123456",
-        //   "email": body.email,
-        //   "role": "USER",
-        //   "avatar": ""
-        // });
         print(serverResponse.statusCode);
-        LoginResponse authResponse = LoginResponse.fromJson(
-            jsonDecode(serverResponse.body));
         if (serverResponse.statusCode >= 200 &&
             serverResponse.statusCode < 300) {
-          sharedPrefsUtils.saveUser(authResponse.data!.userData!);
-          sharedPrefsUtils.saveToken(authResponse.data!.token!);
+
+          sharedPrefsUtils.saveUser(response);
+          sharedPrefsUtils.saveToken(response.token!);
           return const Right(true);
         } else {
-          print(authResponse.message);
-          return left(Failuer(authResponse.message ?? Constants.defaultErrorMessage));
+          print(responseError.errors![0].msg);
+          return left(Failuer(responseError.errors![0].msg ?? Constants.defaultErrorMessage));
         }
       }catch(e,ee){
+        print("$e,$ee");
         return left(Failuer(Constants.defaultErrorMessage));
       }
     }else{
