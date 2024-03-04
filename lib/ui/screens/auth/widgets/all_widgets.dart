@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-
-import '../../../../utils/app_colors.dart';
+import 'package:graduation_project/ui/utils/app_colors.dart';
 
 
 Widget textFF({
@@ -14,7 +12,7 @@ Widget textFF({
   bool isDark = false,
 }) => TextFormField(
   controller: controller,
-  style: TextStyle(
+  style: const TextStyle(
     color: AppColors.black,
     fontWeight: FontWeight.bold
   ),
@@ -22,8 +20,9 @@ Widget textFF({
     filled: true,
     fillColor:Colors.white.withOpacity(.91),
     hintText: labelText,
-    hintStyle: TextStyle(
+    hintStyle:  TextStyle(
       color: AppColors.black ,
+      fontSize: isPass? 22: 18,
     ),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10) ,
@@ -32,7 +31,7 @@ Widget textFF({
     suffixIcon: isPass?
     icon: null,
 ),
-  obscureText: !isShown,
+  obscureText:isShown,
   keyboardType:isMultiLine? TextInputType.multiline : null,
   maxLines:isMultiLine? 5 : 1,
 );
