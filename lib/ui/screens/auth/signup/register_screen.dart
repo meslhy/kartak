@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/shared_locale/helper.dart';
 import 'package:graduation_project/ui/screens/auth/signup/register_view_model.dart';
 import 'package:graduation_project/ui/utils/app_assets.dart';
 import 'package:graduation_project/ui/utils/app_colors.dart';
@@ -19,7 +18,7 @@ class RegisterScreen extends StatefulWidget {
 
 
 
-   const RegisterScreen( {super.key});
+  const RegisterScreen( {super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -49,22 +48,67 @@ class _RegisterScreenState extends State<RegisterScreen> {
           padding: const EdgeInsets.only(left: 20.0,right: 20,top: 80),
           child: Column(
             children: [
+              BlocBuilder(
+                bloc: viewModel,
+                builder: (context, state) {
+                  if(viewModel.isImageSelected) {
+                    return Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: FileImage(viewModel.pickedImage!),
+                          radius: 80,
+                        ),
+                        FloatingActionButton(
+                          backgroundColor: AppColors.black,
+                          onPressed: (){
+                            viewModel.getImage();
+
+                          },
+                          child: const Icon(Icons.camera_alt_outlined),
+                        ),
+                      ],
+                    );
+                  }else{
+                    return Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        const  CircleAvatar(
+                          backgroundImage: AssetImage(AppAssets.unknown),
+                          radius: 80,
+                        ),
+                        FloatingActionButton(
+                          backgroundColor: AppColors.black,
+                          onPressed: (){
+                            viewModel.getImage();
+
+                          },
+                          child: Icon(Icons.camera_alt_outlined),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+
+
               Expanded(
                 child: SingleChildScrollView(
+                  reverse: true,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Form(
-                     key: viewModel.registerKey,
+                      key: viewModel.registerKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
 
                         children: [
-                          FormLabelWidget(label: 'your Name'),
+                          FormLabelWidget(label: 'Name'),
                           const SizedBox(
                             height: 18,
                           ),
                           CustomTextFormField(
-                              hintText: 'enter your first name',
+                              hintText: 'enter your name',
                               controller: viewModel.name,
                               validator: (text) {
                                 if (text == null || text.trim().isEmpty) {
@@ -82,20 +126,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           CustomTextFormField(
                               hintText: 'enter your email Address',
-                              controller: viewModel.emailController,
+                              controller: viewModel.email,
                               validator:(text){
-                          if (text == null || text.trim().isEmpty) {
-                          return 'Please enter email';
-                          }
-                          var emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(text);
-                          if (!emailValid) {
-                          return 'email format not valid';
-                          }
+                                if (text == null || text.trim().isEmpty) {
+                                  return 'Please enter email';
+                                }
+                                var emailValid = RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                    .hasMatch(text);
+                                if (!emailValid) {
+                                  return 'email format not valid';
+                                }
 
-                          return null;
+                                return null;
                               } ,
+                              type: TextInputType.emailAddress),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          FormLabelWidget(label: 'Phone Number'),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          CustomTextFormField(
+                              hintText: 'enter your Phone Number',
+                              controller: viewModel.phone,
+                              validator: (text) {
+                                if (text == null || text.trim().isEmpty) {
+                                  return 'Please enter last Name';
+                                }
+                                return null;
+                              },
                               type: TextInputType.emailAddress),
                           const SizedBox(
                             height: 20,
@@ -106,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           CustomTextFormField(
                             hintText: 'enter your password',
-                            controller: viewModel.passController,
+                            controller: viewModel.pass,
                             validator: (text) {
                               if (text == null || text.trim().isEmpty) {
                                 return 'Please enter password ';
@@ -128,12 +189,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           CustomTextFormField(
                             hintText: 're-enter your password confirmation',
-                            controller: viewModel.passwordConfirm,
+                            controller: viewModel.rePass,
                             validator: (text) {
                               if (text == null || text.trim().isEmpty) {
                                 return 'Please re-enter password ';
                               }
-                              if (text != viewModel.passController.text) {
+                              if (text != viewModel.pass.text) {
                                 return "Password doesn't match.";
                               }
                               return null;
@@ -147,7 +208,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           CustomButtonWidget(
                               title: 'Sign Up',
                               onPressed: () {
-                                SharedPreferenceGlobal.putData(key: "lastIndex", data: 0);
                                 viewModel.register();
                               })
                         ],
@@ -159,6 +219,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ],
           ),
         ),
+
       ),
     );
   }

@@ -15,8 +15,16 @@ class RegisterUseCase {
     required name,
     required password,
     required email,
+    required phone,
     required passwordConfirm,
+    required image
   } ){
-    return repo.register(name: name,email: email,password: password,passwordConfirm:passwordConfirm);
+    return repo.register(
+        name: name,
+        email: email,
+        phone: phone,
+        password: password,
+        passwordConfirm:passwordConfirm,
+        image:image);
   }
 }

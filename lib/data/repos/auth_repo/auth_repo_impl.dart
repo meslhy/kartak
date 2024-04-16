@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/responses/auth_responses/auth_response.dart';
 import 'package:graduation_project/data/model/responses/auth_responses/errors.dart';
 import 'package:graduation_project/ui/utils/end_points.dart';
 import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:injectable/injectable.dart';
 import '../../../domain/repos/auth_repo/auth_repo.dart';
 import '../../../ui/utils/constants.dart';
@@ -74,33 +76,35 @@ class AuthRepoImpl extends AuthRepo {
     required String name,
     required String password,
     required String passwordConfirm,
+    required String phone,
     required String email,
+    required File image
 }) async {
-
-    final body = jsonEncode({
-      "name":name,
-      "email":email,
-      "password":password,
-      "passwordConfirm":passwordConfirm,
-    });
 
     final connectivityResult = await (connectivity.checkConnectivity());
     if(connectivityResult ==ConnectivityResult.wifi ||connectivityResult ==ConnectivityResult.mobile){
       try {
-        Uri url = Uri.https(EndPoints.baseUrl,EndPoints.register);
+        var formData = MultipartRequest('POST', Uri.parse("https://kartak.onrender.com/api/user"));
+        formData.fields.addAll({
+          'name': name,
+          'email': email,
+          'phone': phone,
+          'password': password,
+        });
 
-        Response serverResponse = await post(
-            url,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: body
-        );
+        formData.files.add( MultipartFile(
+          'profileImage',
+          image.readAsBytes().asStream(),
+          image.lengthSync(),
+          filename: image.path.split("/").last,
+          contentType: MediaType('image', 'png'),
+        ));
 
-        AuthResponse response = AuthResponse.fromJson(jsonDecode(serverResponse.body));
-        Errors responseError = Errors.fromJson(jsonDecode(serverResponse.body));
+        print(formData.fields);
 
-        print(serverResponse.statusCode);
+        Response serverResponse = await Response.fromStream(await formData.send());
+        AuthResponse response = AuthResponse.fromJson(
+            jsonDecode(serverResponse.body));
         if (serverResponse.statusCode >= 200 &&
             serverResponse.statusCode < 300) {
 
@@ -108,8 +112,8 @@ class AuthRepoImpl extends AuthRepo {
           sharedPrefsUtils.saveToken(response.token!);
           return const Right(true);
         } else {
-          print(responseError.errors![0].msg);
-          return left(Failuer(responseError.errors![0].msg ?? Constants.defaultErrorMessage));
+          print(response.message);
+          return left(Failuer(response.message ?? Constants.defaultErrorMessage));
         }
       }catch(e,ee){
         print("$e,$ee");
