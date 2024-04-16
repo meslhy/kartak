@@ -17,6 +17,8 @@ import '../../utils/app_colors.dart';
 class SplashScreen extends StatefulWidget {
   static const String routeName = "splash";
 
+  const SplashScreen({super.key});
+
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -34,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen> {
     return  BlocListener(
       bloc: viewModel,
       listener:(context, state) {
-        print(state);
        if(state is BaseRequestErrorState && state.message == "token is invalid" ){
          Navigator.pushReplacementNamed(context, LoginScreen.routeName);
        } else{

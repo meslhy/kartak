@@ -1,6 +1,6 @@
 abstract class EndPoints {
-  static String baseUrl = "e-commerce-3-gu5g.onrender.com";
-  static String login = "/api/v1/auth/login";
+  static String baseUrl = "kartak.onrender.com";
+  static String login = "/api/auth";
   static String register = "/api/v1/auth/signup";
 
 }

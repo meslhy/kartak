@@ -23,17 +23,17 @@ class TapFeaturesWidget extends StatelessWidget {
             ),
             child: Icon(icon),
           ),
-          SizedBox(width: 10,),
+          const SizedBox(width: 10,),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
                 color: AppColors.black,
             ),
           ),
           const Spacer(),
-          Icon(Icons.arrow_forward_ios_outlined),
+          const Icon(Icons.arrow_forward_ios_outlined),
         ],
       ),
     );

@@ -5,7 +5,6 @@ import 'package:graduation_project/data/model/responses/auth_responses/auth_resp
 import 'package:graduation_project/data/model/responses/auth_responses/errors.dart';
 import 'package:graduation_project/ui/utils/end_points.dart';
 import 'package:http/http.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:injectable/injectable.dart';
 import '../../../domain/repos/auth_repo/auth_repo.dart';
 import '../../../ui/utils/constants.dart';
@@ -36,7 +35,6 @@ class AuthRepoImpl extends AuthRepo {
       Response serverResponse = await post(
           url,
           headers: {
-
             "Content-Type": "application/json",
           },
           body: body

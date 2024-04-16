@@ -15,7 +15,7 @@ abstract class AppTheme{
     drawerTheme:const DrawerThemeData(),
     textTheme:  TextTheme(
       //todo:this style to title
-      labelLarge:  TextStyle(
+      labelLarge:  const TextStyle(
         color: AppColors.primary,
         fontWeight: FontWeight.bold,
         fontSize: 30,
@@ -29,21 +29,21 @@ abstract class AppTheme{
       ),
 
       //todo:this style to title of articles
-      labelSmall: TextStyle(
+      labelSmall: const TextStyle(
         color: AppColors.accent,
         fontWeight: FontWeight.w500,
         fontSize: 14,
       ),
 
       //todo:this style to date of articles
-      displaySmall: TextStyle(
+      displaySmall: const TextStyle(
 
         fontWeight: FontWeight.w400,
         fontSize: 13,
       ),
 
       //todo:this style to titles
-      displayLarge: TextStyle(
+      displayLarge: const TextStyle(
         color: AppColors.accent,
         fontWeight: FontWeight.bold,
         fontSize: 24,

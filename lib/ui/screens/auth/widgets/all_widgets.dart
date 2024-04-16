@@ -48,18 +48,18 @@ Widget buttonElevated({
     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
       RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),
-          side: BorderSide(color: AppColors.primary),
+          side: const BorderSide(color: AppColors.primary),
       ),
     ),
   ),
   child: Padding(
-    padding: EdgeInsets.symmetric(
+    padding: const EdgeInsets.symmetric(
         vertical: 16, horizontal: 12),
     child: Row(
       children: [
-        Text(name, style: TextStyle(fontSize: 18),),
-        Spacer(),
-        Icon(Icons.arrow_forward)
+        Text(name, style: const TextStyle(fontSize: 18),),
+        const Spacer(),
+        const Icon(Icons.arrow_forward)
       ],
     ),
   ),

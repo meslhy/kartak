@@ -30,13 +30,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       routes: {
-        SplashScreen.routeName :(context) => SplashScreen(),
-        LoginScreen.routeName :(context) => LoginScreen(),
-        RegisterScreen.routeName: (context) => RegisterScreen(),
+        SplashScreen.routeName :(context) => const SplashScreen(),
+        LoginScreen.routeName :(context) => const LoginScreen(),
+        RegisterScreen.routeName: (context) => const RegisterScreen(),
         // ProfileScreen.routeName:(context) => ProfileScreen(),
         // UpdatePictureScreen.routeName:(context) => UpdatePictureScreen(),
-        MainScreen.routeName :(context) => MainScreen(),
-        HomeScreen.routeName :(context) => HomeScreen(),
+        MainScreen.routeName :(context) => const MainScreen(),
+        HomeScreen.routeName :(context) => const HomeScreen(),
       },
       initialRoute: LoginScreen.routeName,
     );
