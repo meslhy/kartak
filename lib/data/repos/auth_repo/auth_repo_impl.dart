@@ -111,6 +111,7 @@ class AuthRepoImpl extends AuthRepo {
             serverResponse.statusCode < 300) {
 
           sharedPrefsUtils.saveUser(response);
+          print("token is : ${response.message}");
           sharedPrefsUtils.saveToken(response.token!);
           return const Right(true);
         } else {
