@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import 'package:graduation_project/data/model/responses/auth_responses/auth_response.dart';
-import 'package:graduation_project/data/model/responses/auth_responses/errors.dart';
+import 'package:graduation_project/data/model/responses/auth_response/auth_response.dart';
 import 'package:graduation_project/ui/utils/end_points.dart';
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
@@ -71,6 +70,8 @@ class AuthRepoImpl extends AuthRepo {
   }
 
 
+
+
   @override
   Future<Either<Failuer, bool>> register({
     required String name,
@@ -90,6 +91,7 @@ class AuthRepoImpl extends AuthRepo {
           'email': email,
           'phone': phone,
           'password': password,
+          'confirmPassword': passwordConfirm,
         });
 
         formData.files.add( MultipartFile(

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:graduation_project/data/model/responses/auth_responses/auth_response.dart';
+import 'package:graduation_project/data/model/responses/auth_response/auth_response.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

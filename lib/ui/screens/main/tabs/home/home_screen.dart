@@ -1,17 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/data/model/responses/auth_responses/auth_response.dart';
+import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/domain/di/di.dart';
-import 'package:graduation_project/ui/screens/main/tabs/home/home_view_model.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
+import 'package:graduation_project/ui/utils/constants.dart';
+import 'package:graduation_project/ui/widgets/error_view.dart';
+import 'package:graduation_project/ui/widgets/loading_widget.dart';
 
-import '../../../../utils/app_colors.dart';
-
+import 'home_view_model.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = "HomeRoute";
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -19,192 +19,161 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   HomeViewModel viewModel = getIt();
+
   @override
   void initState() {
     viewModel.getUser();
+    viewModel.getPlaces();
     super.initState();
   }
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:  const EdgeInsetsDirectional.only(start:32 , end: 32, top:64 ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildAppBar(context),
-            const SizedBox(height: 40,),
-            Center(
-                child: buildCard(context),
+    return Column(
+      children: [
+        PreferredSize(
+          preferredSize: const Size.fromHeight(100),
+          child: AppBar(
+            backgroundColor: Colors.black,
+            elevation: 0,
+            leading: BlocBuilder(
+              bloc:viewModel,
+              builder:(context, state) {
+                if(state is BaseRequestUserState){
+                  return Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(80),
+                        image: DecorationImage(
+                            image: NetworkImage(state.data!.data!.cloudImage!.url??"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/813px-Unknown_person.jpg"), fit: BoxFit.cover)),
+                    margin: const EdgeInsets.only(left: 20 ,bottom: 10,top: 10),
+                  );
+                }else{
+                  return Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(80),
+                        image: const DecorationImage(
+                            image: AssetImage("assets/images/me.JPG"), fit: BoxFit.cover)),
+                    margin: const EdgeInsets.only(left: 20 ,bottom: 10,top: 10),
+                  );
+                }
+              },
             ),
-            const SizedBox(height: 40,),
-            buildListOfTransaction(context),
-          ],
+            title: const Row(
+              children: [
+                Text(
+                  " KARTAK",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  " Card",
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Color.fromRGBO(178, 133, 28, 1.0)),
+                ),
+              ],
+            ),
+            actions: [
+              IconButton(
+                padding: const EdgeInsets.only(right: 15),
+                icon: const Icon(Icons.menu, color: Colors.white),
+                onPressed: () {},
+              ),
+            ],
+          ),
         ),
-      ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                BlocBuilder(
+                  bloc: viewModel.getPlacesUseCase,
+                  builder:(context, state) {
+                    if(state is BaseRequestSuccessState){
+                    return buildListOfPlaces(context,state.data);
+                    }else if (state is BaseRequestErrorState){
+                    return  ErrorView(message:state.message ?? Constants.defaultErrorMessage);
+                }else{
+                     return LoadingWidget();
+                    }
+                  }
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget buildAppBar(BuildContext context)=>Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      BlocBuilder(
-        bloc: viewModel,
-        builder: (context, state) {
-          if(state is BaseRequestSuccessState){
-            AuthResponse data = state.data;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Hello,${data.data?.name??""}",
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-                Text(
-                  data.data?.role??"",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight:FontWeight.bold,fontSize: 14),
-                ),
-              ],
-            );
-          }else{
-            return Text(
-              "Hello,",
-              style: Theme.of(context).textTheme.labelLarge,
-            );
-          }
-        },
-      ),
-    ],
+  Widget buildListOfPlaces(BuildContext context , List<PlacesDM> places) => ListView.separated(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    itemBuilder: (context, index) => buildItemOfList( places[index]),
+    separatorBuilder: (context, index) => const SizedBox(height: 20),
+    itemCount: places.length,
   );
 
-  Widget buildCard(BuildContext context) => SizedBox(
-    height: MediaQuery.of(context).size.height *0.18,
-    width: MediaQuery.of(context).size.width *0.8,
-    child: Card(
-      elevation: 20,
-      color: AppColors.black,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Balance",
-                style: TextStyle(
-                    color: AppColors.primary,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                ),
-              ),
-              Text(
-                "\$1.234",
-                style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                  fontSize: 26,
-                ),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Card",
-                style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                ),
-              ),
-              Text(
-                "Kartak",
-                style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                  fontSize: 26,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
-
-  Widget buildListOfTransaction(BuildContext context)  => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+  Widget buildItemOfList(PlacesDM place) => Row(
     children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "Last Transaction",
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(color: AppColors.black),
-          ),
-          TextButton(
-              onPressed: (){},
-              child: Text(
-                "view all",
-                style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 20,fontWeight: FontWeight.normal),
-              ),
-          ),
-        ],
-      ),
-      SizedBox(
-        height: MediaQuery.of(context).size.height *.44,
-        child: ListView.separated(
-            itemBuilder: (context, index) => buildItemOfLastTransaction(),
-            separatorBuilder: (context, index) => const SizedBox(height: 18),
-            itemCount: 4),
-      )
-    ],
-  );
-
-  Widget buildItemOfLastTransaction() => Row(
-    children: [
-       Container(
-        height:70 ,
-        width: 70,
+      Container(
+        margin: const EdgeInsets.only(right: 20, left: 30),
+        height: MediaQuery.of(context).size.height * .15,
+        width: MediaQuery.of(context).size.width * .3,
         decoration: BoxDecoration(
-          color: AppColors.black,
-          borderRadius: BorderRadius.circular(30)
+          borderRadius: BorderRadius.circular(12),
+          image:  DecorationImage(
+            image: NetworkImage(place.cloudImage!.url!),
+            fit: BoxFit.cover,
+          ),
         ),
       ),
-      const SizedBox(width:12,),
-      const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "NetFlix",
-            style: TextStyle(
-              color: AppColors.black,
-              fontWeight: FontWeight.w500,
-              fontSize: 20,
-            ),
+      Expanded(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * .15,
+          width: MediaQuery.of(context).size.width * .3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+               place.slug??"",
+               style:const TextStyle(
+                 color: Color.fromARGB(255, 0, 0, 0),
+                 fontWeight: FontWeight.bold,
+                 fontSize: 18,
+               ),
+                ),
+              const SizedBox(height: 2,),
+              Text(
+                place.categore??"",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 114, 114, 114),
+                  fontSize: 12,
+                ),
+              ),
+              const SizedBox(height: 5,),
+              Expanded(
+                child: Text(
+                  place.description??"",
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 114, 114, 114),
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              IconButton(
+                padding: const EdgeInsets.only(right: 25),
+                icon: const Icon(Icons.favorite_outline, color: Colors.black ,size: 20,),
+                onPressed: () {},
+              ),
+            ],
           ),
-          SizedBox(height: 6,),
-          Text(
-            "Month subscription",
-            style: TextStyle(
-              color: AppColors.grey,
-              fontSize: 18,
-            ),
-          ),
-        ],
-      ),
-      const Spacer(),
-      const Text(
-        "\$12",
-        style: TextStyle(
-          color: AppColors.grey,
-          fontWeight: FontWeight.bold,
-          fontSize: 22,
         ),
       ),
     ],

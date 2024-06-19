@@ -6,6 +6,9 @@ import 'package:graduation_project/domain/di/di.dart';
 import 'package:graduation_project/shared_locale/helper.dart';
 import 'package:graduation_project/ui/screens/auth/login/login_view_model.dart';
 import 'package:graduation_project/ui/screens/auth/widgets/all_widgets.dart';
+import 'package:graduation_project/ui/screens/main/tabs/home/home_screen.dart';
+import 'package:graduation_project/ui/utils/app_assets.dart';
+import 'package:graduation_project/ui/widgets/custom_text_form_field.dart';
 
 import '../../../utils/app_colors.dart';
 import '../../../utils/base_request_states.dart';
@@ -43,106 +46,183 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: AppColors.primary,
-          title:const Text(
-            "Login",
-            style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold
-            ),
-          ),
-          toolbarHeight: MediaQuery
-              .of(context)
-              .size
-              .height * .09,
-        ),
-        body: Center(
-          child: Container(
-            margin: const EdgeInsets.all(24),
-            height: MediaQuery.of(context).size.height * .5,
-            width: MediaQuery.of(context).size.width *.8,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color:AppColors.primary,
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+          backgroundColor: Colors.white,
+          body: SingleChildScrollView(
+            child: Stack(
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "Welcome back !",
-                    style: TextStyle(
-                        fontSize: 24,
-                        color:AppColors.white,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
+                Image.asset(
+                  AppAssets.bg,
+                  fit: BoxFit.cover,
                 ),
+                Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 250),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Card(
+                        color: Colors.black,
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(30),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Sign In',
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Theme(
+                                data: ThemeData(
+                                  textTheme: const TextTheme(
+                                    bodyText1: TextStyle(
+                                        color: Colors.white), // Text color
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
 
-                textFF(labelText: "email" , controller: viewModel.emailController,isShown: false),
-                const SizedBox(
-                  height: 20,
-                ),
-                textFF(
-                  controller: viewModel.passController,
-                  labelText: "........" ,
-                  isShown: viewModel.isPass,
-                  isPass: true,
-                  icon: IconButton(
-                      onPressed: (){
-                        viewModel.isPass =!viewModel.isPass;
-                    viewModel.icon = viewModel.isPass ? Icons.remove_red_eye_outlined : Icons.remove_outlined ;
-                    setState(() {});
-                  }, icon: Icon(viewModel.icon)),
-                ),
-                const SizedBox(
-                  height: 26,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    SharedPreferenceGlobal.putData(key: "lastIndex", data: 0);
-                   viewModel.login();
-                  },
-                  style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                            side: const BorderSide(color: AppColors.primary)
+                                    CustomTextFormField(
+                                        hintText:  'Email',
+                                        controller: viewModel.emailController,
+                                        validator: (text){
+                                          if (text == null || text.trim().isEmpty) {
+                                            return 'Please enter email';
+                                          }
+                                          var emailValid = RegExp(
+                                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                              .hasMatch(text);
+                                          if (!emailValid) {
+                                            return 'email format not valid';
+                                          }
+
+                                          return null;
+                                        },
+                                        type: TextInputType.emailAddress
+                                    ),
+                                    CustomTextFormField(
+                                        hintText:  'Password',
+                                        controller: viewModel.passController,
+                                        validator:(text) {
+                                          if (text == null || text.trim().isEmpty) {
+                                            return 'Please enter password ';
+                                          }
+                                          if (text.length < 6) {
+                                            return 'Phone number should be at least 6 chrs.';
+                                          }
+                                          return null;
+                                        },
+                                        type: TextInputType.visiblePassword,
+                                      isPassword: true,
+                                    ),
+                                    const SizedBox(height: 20,),
+                                    GestureDetector(
+                                        onTap: () {
+                                          // Handle your sign up link action here
+                                        },
+                                        child: const Text(
+                                          "Forget Password?",
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            color: Color.fromRGBO(
+                                                227, 163, 22, 1.0),
+                                            decoration: TextDecoration.underline,
+                                          ),
+                                        )
+                                    ),
+                                  ],
+                                ),
+
+                              ),
+                              Container(
+                                width: 190,
+                                height: 50,
+                                margin: const EdgeInsets.only(top: 30),
+                                decoration: BoxDecoration(
+                                  //  borderRadius: BorderRadius.circular(50),
+                                  border: Border.all(color: Colors.black),
+                                ),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    viewModel.login();
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                          (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.disabled)) {
+                                          return Colors
+                                              .transparent; // Disabled color
+                                        }
+                                        return const Color.fromRGBO(
+                                            227, 163, 22, 1.0); // Enabled color
+                                      },
+                                    ),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        side: const BorderSide(color: Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Sign In',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context,RegisterScreen.routeName);
+                                },
+                                child: const Row(
+                                    mainAxisAlignment:MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Don't have an account ?",
+                                        style: TextStyle(
+                                          color: Color.fromRGBO(215, 212, 181, 1.0),
+                                        ),
+                                      ),
+                                      Text(
+                                        " Sign Up",
+                                        style: TextStyle(
+                                          color: Color.fromRGBO(227, 163, 22, 1),
+                                        ),
+                                      )
+                                    ]),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      backgroundColor: MaterialStateProperty.all(AppColors.primary)
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 12),
-                    child: Row(
-                      children: [
-                        Text("Login", style: TextStyle(fontSize: 18),),
-                        Spacer(),
-                        Icon(Icons.arrow_forward)
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 18,),
-                InkWell(
-                  onTap: () {
-                   Navigator.pushNamed(context, RegisterScreen.routeName);
-                  },
-                  child:  const Text(
-                    "Create account",
-                    // style: TextStyle(fontSize: 18, color: settingsProvider.isDarkEnabled()? AppColors.white:AppColors.grey),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-      ),
+          ))
+      ,
     );
   }
 }
