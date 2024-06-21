@@ -9,7 +9,6 @@ abstract class AppTheme{
     scaffoldBackgroundColor: AppColors.white,
     appBarTheme:const AppBarTheme(
       color: AppColors.primary,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(30))),
       centerTitle: true,
     ),
     drawerTheme:const DrawerThemeData(),

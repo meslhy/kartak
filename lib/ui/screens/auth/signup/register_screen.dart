@@ -126,95 +126,87 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                Theme(
-                                  data: ThemeData(
-                                    textTheme: const TextTheme(
-                                      bodyText1: TextStyle(
-                                          color: Colors.white), // Text color
-                                    ),
-                                  ),
-                                  child:  Column(
-                                    children: [
-                                      CustomTextFormField(
-                                          hintText:  'User Name',
-                                          controller: viewModel.name,
-                                          validator: (text){
-                                            if (text == null || text.trim().isEmpty) {
-                                              return 'Please enter user name';
-                                            }
-                                            return null;
-                                          },
-                                          type: TextInputType.text,
-                                        notPreIcon: true,
-                                      ),
-                                      CustomTextFormField(
-                                        hintText:  'email',
-                                        controller: viewModel.email,
+                                Column(
+                                  children: [
+                                    CustomTextFormField(
+                                        hintText:  'User Name',
+                                        controller: viewModel.name,
                                         validator: (text){
                                           if (text == null || text.trim().isEmpty) {
-                                            return 'Please enter email';
+                                            return 'Please enter user name';
                                           }
-                                          var emailValid = RegExp(
-                                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                              .hasMatch(text);
-                                          if (!emailValid) {
-                                            return 'email format not valid';
-                                          }
+                                          return null;
+                                        },
+                                        type: TextInputType.text,
+                                      notPreIcon: true,
+                                    ),
+                                    CustomTextFormField(
+                                      hintText:  'email',
+                                      controller: viewModel.email,
+                                      validator: (text){
+                                        if (text == null || text.trim().isEmpty) {
+                                          return 'Please enter email';
+                                        }
+                                        var emailValid = RegExp(
+                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                            .hasMatch(text);
+                                        if (!emailValid) {
+                                          return 'email format not valid';
+                                        }
 
+                                        return null;
+                                      },
+                                      type: TextInputType.emailAddress,
+                                      notPreIcon: true,
+                                    ),
+                                    CustomTextFormField(
+                                        hintText:  'Phone Number',
+                                        controller: viewModel.phone,
+                                        validator: (text){
+                                          if (text == null || text.trim().isEmpty) {
+                                            return 'Please enter user name';
+                                          }
+                                          return null;
+                                        },
+                                        type: TextInputType.phone,
+                                      notPreIcon: true,
+
+                                    ),
+                                    CustomTextFormField(
+                                        hintText:  'Password',
+                                        controller: viewModel.pass,
+                                        validator:(text) {
+                                          if (text == null || text.trim().isEmpty) {
+                                            return 'Please enter password ';
+                                          }
+                                          if (text.length < 6) {
+                                            return 'Phone number should be at least 6 chrs.';
+                                          }
                                           return null;
                                         },
                                         type: TextInputType.emailAddress,
-                                        notPreIcon: true,
-                                      ),
-                                      CustomTextFormField(
-                                          hintText:  'Phone Number',
-                                          controller: viewModel.phone,
-                                          validator: (text){
-                                            if (text == null || text.trim().isEmpty) {
-                                              return 'Please enter user name';
-                                            }
-                                            return null;
-                                          },
-                                          type: TextInputType.phone,
-                                        notPreIcon: true,
+                                      isPassword: true,
+                                      notPreIcon: true,
 
-                                      ),
-                                      CustomTextFormField(
-                                          hintText:  'Password',
-                                          controller: viewModel.pass,
-                                          validator:(text) {
-                                            if (text == null || text.trim().isEmpty) {
-                                              return 'Please enter password ';
-                                            }
-                                            if (text.length < 6) {
-                                              return 'Phone number should be at least 6 chrs.';
-                                            }
-                                            return null;
-                                          },
-                                          type: TextInputType.emailAddress,
-                                        isPassword: true,
-                                        notPreIcon: true,
+                                    ),
+                                    CustomTextFormField(
+                                        hintText:  'Confirm Password',
+                                        controller: viewModel.rePass,
+                                        validator: (text) {
+                                          if (text == null || text.trim().isEmpty) {
+                                            return 'Please enter password ';
+                                          }
+                                          if (text.length < 6) {
+                                            return 'Phone number should be at least 6 chrs.';
+                                          }
+                                          return null;
+                                        },
+                                        type: TextInputType.emailAddress,
+                                      isPassword: true,
+                                      notPreIcon: true,
 
-                                      ),
-                                      CustomTextFormField(
-                                          hintText:  'Confirm Password',
-                                          controller: viewModel.rePass,
-                                          validator: (text) {
-                                            if (text == null || text.trim().isEmpty) {
-                                              return 'Please enter password ';
-                                            }
-                                            if (text.length < 6) {
-                                              return 'Phone number should be at least 6 chrs.';
-                                            }
-                                            return null;
-                                          },
-                                          type: TextInputType.emailAddress,
-                                        isPassword: true,
-                                        notPreIcon: true,
-
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                                 Container(
                                   width: 190,

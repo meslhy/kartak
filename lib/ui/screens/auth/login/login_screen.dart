@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/domain/di/di.dart';
 import 'package:graduation_project/shared_locale/helper.dart';
+import 'package:graduation_project/ui/screens/auth/forget_pass/otp/otp_screen.dart';
+import 'package:graduation_project/ui/screens/auth/forget_pass/send_otp/send_otp_screen.dart';
 import 'package:graduation_project/ui/screens/auth/login/login_view_model.dart';
 import 'package:graduation_project/ui/screens/auth/widgets/all_widgets.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/home_screen.dart';
@@ -83,68 +85,59 @@ class _LoginScreenState extends State<LoginScreen> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              Theme(
-                                data: ThemeData(
-                                  textTheme: const TextTheme(
-                                    bodyText1: TextStyle(
-                                        color: Colors.white), // Text color
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+
+                                  CustomTextFormField(
+                                      hintText:  'Email',
+                                      controller: viewModel.emailController,
+                                      validator: (text){
+                                        if (text == null || text.trim().isEmpty) {
+                                          return 'Please enter email';
+                                        }
+                                        var emailValid = RegExp(
+                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                            .hasMatch(text);
+                                        if (!emailValid) {
+                                          return 'email format not valid';
+                                        }
+
+                                        return null;
+                                      },
+                                      type: TextInputType.emailAddress
                                   ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  children: [
-
-                                    CustomTextFormField(
-                                        hintText:  'Email',
-                                        controller: viewModel.emailController,
-                                        validator: (text){
-                                          if (text == null || text.trim().isEmpty) {
-                                            return 'Please enter email';
-                                          }
-                                          var emailValid = RegExp(
-                                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                              .hasMatch(text);
-                                          if (!emailValid) {
-                                            return 'email format not valid';
-                                          }
-
-                                          return null;
-                                        },
-                                        type: TextInputType.emailAddress
-                                    ),
-                                    CustomTextFormField(
-                                        hintText:  'Password',
-                                        controller: viewModel.passController,
-                                        validator:(text) {
-                                          if (text == null || text.trim().isEmpty) {
-                                            return 'Please enter password ';
-                                          }
-                                          if (text.length < 6) {
-                                            return 'Phone number should be at least 6 chrs.';
-                                          }
-                                          return null;
-                                        },
-                                        type: TextInputType.visiblePassword,
-                                      isPassword: true,
-                                    ),
-                                    const SizedBox(height: 20,),
-                                    GestureDetector(
-                                        onTap: () {
-                                          // Handle your sign up link action here
-                                        },
-                                        child: const Text(
-                                          "Forget Password?",
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                            color: Color.fromRGBO(
-                                                227, 163, 22, 1.0),
-                                            decoration: TextDecoration.underline,
-                                          ),
-                                        )
-                                    ),
-                                  ],
-                                ),
-
+                                  CustomTextFormField(
+                                      hintText:  'Password',
+                                      controller: viewModel.passController,
+                                      validator:(text) {
+                                        if (text == null || text.trim().isEmpty) {
+                                          return 'Please enter password ';
+                                        }
+                                        if (text.length < 6) {
+                                          return 'Phone number should be at least 6 chrs.';
+                                        }
+                                        return null;
+                                      },
+                                      type: TextInputType.visiblePassword,
+                                    isPassword: true,
+                                  ),
+                                  const SizedBox(height: 20,),
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(context,SendOtpScreen.routeName);
+                                      },
+                                      child: const Text(
+                                        "Forget Password?",
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                          color: Color.fromRGBO(
+                                              227, 163, 22, 1.0),
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      )
+                                  ),
+                                ],
                               ),
                               Container(
                                 width: 190,

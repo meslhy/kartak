@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/shared_locale/helper.dart';
+import 'package:graduation_project/ui/screens/auth/forget_pass/otp/otp_screen.dart';
+import 'package:graduation_project/ui/screens/auth/forget_pass/send_otp/send_otp_screen.dart';
 import 'package:graduation_project/ui/screens/auth/login/login_screen.dart';
 import 'package:graduation_project/ui/screens/auth/signup/register_screen.dart';
 import 'package:graduation_project/ui/screens/main/main_screen.dart';
@@ -37,6 +39,8 @@ class MyApp extends StatelessWidget {
         // UpdatePictureScreen.routeName:(context) => UpdatePictureScreen(),
         MainScreen.routeName :(context) => const MainScreen(),
         HomeScreen.routeName :(context) => const HomeScreen(),
+        VerificationOTPScreen.routeName :(context) => const VerificationOTPScreen(),
+        SendOtpScreen.routeName :(context) => const SendOtpScreen(),
       },
       initialRoute: LoginScreen.routeName,
     );

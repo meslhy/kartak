@@ -26,4 +26,14 @@ class HomeRepoImpl extends HomeRepo{
   }
 
 
+  @override
+  Future<Either<Failuer, PlacesDM>> getSpecificPlace(String id) async{
+    if(await connectivity.isInternetConnective){
+      return homeOnlineDS.getSpecificPlace(id);
+    }else{
+      return left(Failuer(Constants.internetErrorMessage));
+    }
+  }
+
+
 }

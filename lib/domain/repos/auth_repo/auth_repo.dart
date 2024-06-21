@@ -16,4 +16,8 @@ abstract class AuthRepo{
     required String email,
     required File image
   });
+
+  Future<Either<Failuer , bool>> sendOTP (String email);
+  Future<Either<Failuer , bool>> verificationOTP (String otp);
+
 }

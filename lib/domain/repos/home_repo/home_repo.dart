@@ -5,4 +5,5 @@ import 'package:graduation_project/data/model/responses/places_response/places_r
 abstract class HomeRepo{
 
   Future<Either<Failuer,List<PlacesDM>>> getPlaces();
+  Future<Either<Failuer, PlacesDM>> getSpecificPlace(String id);
 }
