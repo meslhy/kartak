@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
+import 'package:graduation_project/data/model/responses/places_response/placeDetailsResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/domain/repos/home_repo/ds/home_online_ds.dart';
@@ -24,7 +25,6 @@ class HomeOnlineDSImpl extends HomeOnlineDS{
      Response serverResponse = await get(url);
      PlaceResponse response = PlaceResponse.fromJson(jsonDecode(serverResponse.body));
 
-     print("result is : ${response.message}");
      if(serverResponse.statusCode >= 200 && serverResponse.statusCode < 300){
        return right(response.data!);
      }else{
@@ -35,17 +35,17 @@ class HomeOnlineDSImpl extends HomeOnlineDS{
    }
   }
   
-  Future<Either<Failuer, PlacesDM>> getSpecificPlace(String id) async{
+  Future<Either<Failuer, PlaceDetailsResponse>> getSpecificPlace(String id) async{
    try{
-     Uri url = Uri.parse("https://${EndPoints.baseUrl}/${EndPoints.places}/$id");
+     Uri url = Uri.parse("https://kartak.onrender.com/api/place/$id");
      Response serverResponse = await get(url);
-     PlacesDM response = PlacesDM.fromJson(jsonDecode(serverResponse.body));
+     PlaceDetailsResponse response = PlaceDetailsResponse.fromJson(jsonDecode(serverResponse.body));
 
-     //print("result is : ${response.message}");
+     print("result is : ${serverResponse.body}");
      if(serverResponse.statusCode >= 200 && serverResponse.statusCode < 300){
        return right(response);
      }else{
-       return left(Failuer( Constants.defaultErrorMessage));
+       return left(Failuer(response.message?? Constants.defaultErrorMessage));
      }
    }catch(e,ee){
      return left(Failuer(e.toString()));

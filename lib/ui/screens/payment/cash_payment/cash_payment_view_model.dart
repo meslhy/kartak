@@ -8,6 +8,7 @@ import 'package:injectable/injectable.dart';
 class CashPaymentViewModel extends Cubit {
   TextEditingController totalPriceController = TextEditingController();
   TextEditingController discountCodeController = TextEditingController();
+  TextEditingController ownerController = TextEditingController();
 
   CashPaymentViewModel():super(BaseRequestInitialState());
 

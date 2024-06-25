@@ -65,11 +65,15 @@ class PlacesDM {
       this.cloudImage, 
       this.createdAt, 
       this.updatedAt, 
-      this.v,});
+      this.v,
+    this.owner,
+    this.message
+  });
 
   PlacesDM.fromJson(dynamic json) {
     id = json['_id'];
     name = json['name'];
+    owner = json['owner'];
     slug = json['slug'];
     description = json['description'];
     discount = json['discount'];
@@ -79,10 +83,12 @@ class PlacesDM {
     cloudImage = json['cloudImage'] != null ? CloudImage.fromJson(json['cloudImage']) : null;
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    message = json['message'];
     v = json['__v'];
   }
   String? id;
   String? name;
+  String? owner;
   String? slug;
   String? description;
   int? discount;
@@ -92,12 +98,14 @@ class PlacesDM {
   CloudImage? cloudImage;
   String? createdAt;
   String? updatedAt;
+  String? message;
   int? v;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['_id'] = id;
     map['name'] = name;
+    map['owner'] = owner;
     map['slug'] = slug;
     map['description'] = description;
     map['discount'] = discount;
@@ -109,6 +117,7 @@ class PlacesDM {
     }
     map['createdAt'] = createdAt;
     map['updatedAt'] = updatedAt;
+    map['message'] = message;
     map['__v'] = v;
     return map;
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/domain/di/di.dart';
+import 'package:graduation_project/ui/screens/main/tabs/home/place_details/place_detales_screen.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:graduation_project/ui/utils/constants.dart';
 import 'package:graduation_project/ui/widgets/error_view.dart';
@@ -119,63 +120,71 @@ class _HomeScreenState extends State<HomeScreen> {
     itemCount: places.length,
   );
 
-  Widget buildItemOfList(PlacesDM place) => Row(
-    children: [
-      Container(
-        margin: const EdgeInsets.only(right: 20, left: 30),
-        height: MediaQuery.of(context).size.height * .15,
-        width: MediaQuery.of(context).size.width * .3,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          image:  DecorationImage(
-            image: NetworkImage(place.cloudImage!.url!),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-      Expanded(
-        child: SizedBox(
+  Widget buildItemOfList(PlacesDM place) => GestureDetector(
+    onTap: (){
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>  PlaceDetails(idOfPlace: place.id!)),
+      );
+    },
+    child: Row(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(right: 20, left: 30),
           height: MediaQuery.of(context).size.height * .15,
           width: MediaQuery.of(context).size.width * .3,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-               place.slug??"",
-               style:const TextStyle(
-                 color: Color.fromARGB(255, 0, 0, 0),
-                 fontWeight: FontWeight.bold,
-                 fontSize: 18,
-               ),
-                ),
-              const SizedBox(height: 2,),
-              Text(
-                place.categore??"",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 114, 114, 114),
-                  fontSize: 12,
-                ),
-              ),
-              const SizedBox(height: 5,),
-              Expanded(
-                child: Text(
-                  place.description??"",
-                  maxLines: 2,
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 114, 114, 114),
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              IconButton(
-                padding: const EdgeInsets.only(right: 25),
-                icon: const Icon(Icons.favorite_outline, color: Colors.black ,size: 20,),
-                onPressed: () {},
-              ),
-            ],
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            image:  DecorationImage(
+              image: NetworkImage(place.cloudImage!.url!),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
-      ),
-    ],
+        Expanded(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * .15,
+            width: MediaQuery.of(context).size.width * .3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                 place.slug??"",
+                 style:const TextStyle(
+                   color: Color.fromARGB(255, 0, 0, 0),
+                   fontWeight: FontWeight.bold,
+                   fontSize: 18,
+                 ),
+                  ),
+                const SizedBox(height: 2,),
+                Text(
+                  place.categore??"",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 114, 114, 114),
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(height: 5,),
+                Expanded(
+                  child: Text(
+                    place.description??"",
+                    maxLines: 2,
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 114, 114, 114),
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  padding: const EdgeInsets.only(right: 25),
+                  icon: const Icon(Icons.favorite_outline, color: Colors.black ,size: 20,),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }

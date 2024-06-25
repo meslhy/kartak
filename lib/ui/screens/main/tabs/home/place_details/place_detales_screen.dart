@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:graduation_project/data/model/responses/places_response/placeDetailsResponse.dart';
+import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/domain/di/di.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/place_details/place_details_view_model.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/place_details/widgets/head_line_text_widget.dart';
@@ -9,26 +11,15 @@ import 'package:graduation_project/ui/screens/payment/payment_details/payment_de
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:graduation_project/ui/utils/constants.dart';
 import 'package:graduation_project/ui/widgets/error_view.dart';
+import 'package:graduation_project/ui/widgets/loading_widget.dart';
 
 class PlaceDetails extends StatefulWidget {
   String idOfPlace;
   static const String routeName = "PlaceDetails";
-  final String name;
-  final String category;
-  final String description;
-  final String owner;
-  final int discount;
-  final String imageUrl;
-  final double rating;
+
 
   PlaceDetails({
-    required this.name,
-    required this.category,
-    required this.description,
-    required this.owner,
-    required this.imageUrl,
-    required this.discount,
-    required this.rating,
+    super.key,
     required this.idOfPlace
   });
 
@@ -47,6 +38,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
 
   @override
   void initState() {
+    print("PlaceeeeeeeeeeeeeeeeScreennnnnnnnnn");
     viewModel.getSpecificPlace(widget.idOfPlace);
     super.initState();
   }
@@ -55,106 +47,73 @@ class _PlaceDetailsState extends State<PlaceDetails> {
   Widget build(BuildContext context) {
     final Color fixedColor = const Color.fromRGBO(227, 163, 22, 1);
 
-    return BlocBuilder(
-      bloc: viewModel.useCase,
-      builder: (context, state) {
-        if(state is BaseRequestSuccessState){
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.black,
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: fixedColor),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Stack(
-                    children: [
-                      Column(
-                        children: [
-                          header(fixedColor),
-                          discountBanner(fixedColor),
-                        ],
-                      ),
-                      Positioned(
-                        left: 15,
-                        top: 15,
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(widget.imageUrl),
-                          radius: 75,
-                        ),
-                      ),
-                    ],
-                  ),
-                  describtion(fixedColor),
-                  reviewsSection(fixedColor),
-                  ratingSection(fixedColor),
-                  reviewsCommentList(fixedColor),
-                  locationSection(fixedColor),
-                  ownerSection(fixedColor),
-                  applyDiscountButton(),
-                ],
-              ),
-            ),
-          );
-        }else if (state is BaseRequestErrorState){
-          return  ErrorView(message:state.message ?? Constants.defaultErrorMessage);
-        }
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.black,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: fixedColor),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Stack(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: fixedColor),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: BlocBuilder(
+        bloc: viewModel.useCase,
+        builder: (context, state) {
+          print(state);
+          if(state is BaseRequestSuccessState){
+            PlaceDetailsData place = state.data;
+            print(state.data.name);
+            return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Column(
+                    Stack(
                       children: [
-                        header(fixedColor),
-                        discountBanner(fixedColor),
+                        Column(
+                          children: [
+                            header(fixedColor , place.name??""),
+                            discountBanner(fixedColor , "${place.discount??""}"),
+                          ],
+                        ),
+                        Positioned(
+                          left: 15,
+                          top: 15,
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                place.cloudImage!.url??
+                                    "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=2048x2048&w=is&k=20&c=ohMtddTt7BppCvEUNGqJ9FRDyJqAdkzonVQ7KmWbTrg="
+                            ),
+                            radius: 75,
+                          ),
+                        ),
                       ],
                     ),
-                    Positioned(
-                      left: 15,
-                      top: 15,
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(widget.imageUrl),
-                        radius: 75,
-                      ),
-                    ),
+                    describtion(fixedColor , place.description ??""),
+                    reviewsSection(fixedColor),
+                    ratingSection(fixedColor,place.ratingQuantity??0),
+                    reviewsCommentList(fixedColor),
+                    locationSection(fixedColor),
+                    ownerSection(fixedColor,place.owner??""),
+                    applyDiscountButton(),
                   ],
                 ),
-                describtion(fixedColor),
-                reviewsSection(fixedColor),
-                ratingSection(fixedColor),
-                reviewsCommentList(fixedColor),
-                locationSection(fixedColor),
-                ownerSection(fixedColor),
-                applyDiscountButton(),
-              ],
-            ),
-          ),
-        );
-      },
+              );
+
+          }else if (state is BaseRequestErrorState){
+            return  ErrorView(message:state.message ?? Constants.defaultErrorMessage);
+          }else{
+            return Center(child: LoadingWidget(),);
+          }
+
+        },
+      ),
     );
   }
 
 
 
-  Widget header(Color fixedColor) {
+  Widget header(Color fixedColor , String name) {
     return Container(
       padding: const EdgeInsets.only(left: 180, right: 5, bottom: 5),
       color: Colors.black,
@@ -162,7 +121,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
       child: Align(
         alignment: Alignment.bottomLeft,
         child: Text(
-          widget.name,
+          name,
           style: TextStyle(
             color: fixedColor,
             fontSize: 24,
@@ -173,7 +132,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
     );
   }
 
-  Widget discountBanner(Color fixedColor) {
+  Widget discountBanner(Color fixedColor , String discount) {
     return Container(
       height: 40,
       margin: const EdgeInsets.only(bottom: 60),
@@ -182,7 +141,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
       child: Align(
         alignment: Alignment.centerRight,
         child: Text(
-          '${widget.discount}% Discount',
+          '$discount% Discount',
           textAlign: TextAlign.right,
           style: const TextStyle(
             color: Colors.red,
@@ -194,18 +153,18 @@ class _PlaceDetailsState extends State<PlaceDetails> {
     );
   }
 
-  Widget describtion(Color fixedColor) {
+  Widget describtion(Color fixedColor , String category) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           HeadlineTextWidget(
-            text: widget.category,
+            text: category,
           ),
           Container(
             margin: const EdgeInsets.only(left: 10),
-            child: _buildDescription(),
+            child: _buildDescription(category),
           ),
         ],
       ),
@@ -226,13 +185,14 @@ class _PlaceDetailsState extends State<PlaceDetails> {
     );
   }
 
-  Widget ratingSection(Color fixedColor) {
+  Widget ratingSection(Color fixedColor , int rating) {
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
-          '4.5',
-          style: TextStyle(
+         Text(
+          "$rating"??"",
+          style: const TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
           ),
@@ -241,7 +201,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
         Column(
           children: [
             RatingBar.builder(
-              initialRating: widget.rating,
+              initialRating: rating.toDouble(),
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,
@@ -331,19 +291,25 @@ class _PlaceDetailsState extends State<PlaceDetails> {
   Widget locationSection(Color fixedColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child:  Column(
+      child:   Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           HeadlineTextWidget(
             text: 'Location',
           ),
-          SizedBox(height: 120),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Container(
+              width: 100,
+              height: 100,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget ownerSection(Color fixedColor) {
+  Widget ownerSection(Color fixedColor , String owner) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -355,7 +321,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
           Container(
             margin: const EdgeInsets.only(left: 100),
             child: Text(
-              capitalizeFirstLetters(widget.owner),
+              capitalizeFirstLetters(owner),
               style: const TextStyle(fontSize: 16),
             ),
           ),
@@ -389,7 +355,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PaymentDetails(),
+                              builder: (context) => const PaymentDetails(),
                             ),
                           );
                         },
@@ -445,8 +411,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
     );
   }
 
-  Widget _buildDescription() {
-    final description = widget.description;
+  Widget _buildDescription(String description) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -1,7 +1,10 @@
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/domain/di/di.dart';
 import 'package:graduation_project/shared_locale/helper.dart';
+import 'package:graduation_project/ui/utils/app_assets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/app_colors.dart';
 import 'main_screen_view_model.dart';
 
@@ -18,8 +21,11 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   MainViewModel viewModel = getIt();
+
+
   @override
   void initState() {
+    viewModel.payment("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjcyYTUwNzlhNDlmMDk5YzAzNmE3ZWYiLCJpYXQiOjE3MTkyNTI4MDUsImV4cCI6MTcxOTMzOTIwNX0.YVcQOtsnBl1XkE6Evyx1QxI_M1S1BW9aSh0Q5E2iIlo", "5", "yousef", 1000);
     super.initState();
   }
 
@@ -38,7 +44,12 @@ class _MainScreenState extends State<MainScreen> {
         }
       },
       child: Scaffold(
-        body: currentScreen,
+        body: Stack(
+          children: [
+            Image.asset(AppAssets.bg,fit: BoxFit.cover),
+            currentScreen,
+          ],
+        ),
         bottomNavigationBar:navBar() ,
       ),
     );

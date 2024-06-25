@@ -8,6 +8,7 @@ import 'package:graduation_project/ui/screens/main/main_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/home_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/profile_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/update_picture/update_picture_screen.dart';
+import 'package:graduation_project/ui/screens/main/tabs/transaction/transaction_screen.dart';
 
 import 'package:graduation_project/ui/screens/splash/splash_screen.dart';
 import 'package:graduation_project/ui/utils/app_theme.dart';
@@ -41,8 +42,9 @@ class MyApp extends StatelessWidget {
         HomeScreen.routeName :(context) => const HomeScreen(),
         VerificationOTPScreen.routeName :(context) => const VerificationOTPScreen(),
         SendOtpScreen.routeName :(context) => const SendOtpScreen(),
+        TransactionScreen.routeName :(context) =>  TransactionScreen(),
       },
-      initialRoute: LoginScreen.routeName,
+      initialRoute: MainScreen.routeName,
     );
   }
 }

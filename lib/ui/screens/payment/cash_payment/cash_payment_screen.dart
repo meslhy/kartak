@@ -25,6 +25,7 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
               children: [
                 buildTextField(labelText: 'Total Price' , controller: viewModel.totalPriceController),
                 buildTextField(labelText: 'Discount Code' , controller: viewModel.discountCodeController),
+                buildTextField(labelText: 'Owner' , controller: viewModel.ownerController),
                 Container(
                   padding: EdgeInsets.all(5),
                   margin: EdgeInsets.all(20),
