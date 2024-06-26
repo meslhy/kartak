@@ -57,6 +57,7 @@ dependencies:
   flutter_timer_countdown: ^1.0.7
   flutter_rating_bar: ^4.0.1
   google_maps_flutter:
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,8 @@ dev_dependencies:
   injectable_generator:
     # add build runner if not already added
   build_runner:
+  analyzer:
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

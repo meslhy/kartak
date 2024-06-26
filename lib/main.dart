@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         SplashScreen.routeName :(context) => const SplashScreen(),
         LoginScreen.routeName :(context) => const LoginScreen(),
         RegisterScreen.routeName: (context) => const RegisterScreen(),
-        // ProfileScreen.routeName:(context) => ProfileScreen(),
+         ProfileScreen.routeName:(context) => ProfileScreen(),
         // UpdatePictureScreen.routeName:(context) => UpdatePictureScreen(),
         MainScreen.routeName :(context) => const MainScreen(),
         HomeScreen.routeName :(context) => const HomeScreen(),
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         SendOtpScreen.routeName :(context) => const SendOtpScreen(),
         TransactionScreen.routeName :(context) =>  TransactionScreen(),
       },
-      initialRoute: MainScreen.routeName,
+      initialRoute: ProfileScreen.routeName,
     );
   }
 }

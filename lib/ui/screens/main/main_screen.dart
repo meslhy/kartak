@@ -25,7 +25,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    viewModel.payment("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjcyYTUwNzlhNDlmMDk5YzAzNmE3ZWYiLCJpYXQiOjE3MTkyNTI4MDUsImV4cCI6MTcxOTMzOTIwNX0.YVcQOtsnBl1XkE6Evyx1QxI_M1S1BW9aSh0Q5E2iIlo", "5", "yousef", 1000);
     super.initState();
   }
 

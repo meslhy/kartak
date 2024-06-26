@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/domain/use_cases/payment_use_case.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/home_screen.dart';
+import 'package:graduation_project/ui/screens/main/tabs/profile/profile_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/transaction/transaction_screen.dart';
 import 'package:injectable/injectable.dart';
 import '../../../shared_locale/helper.dart';
@@ -19,7 +20,7 @@ class MainViewModel extends Cubit {
     const HomeScreen(),
      TransactionScreen(),
     const HomeScreen(),
-    const HomeScreen(),
+    const ProfileScreen(),
   ];
 
   MainViewModel(this.sharedPreferenceGlobal,this.paymentUseCase) :super(BaseRequestInitialState());
