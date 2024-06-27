@@ -15,7 +15,7 @@ class PaymentUseCase extends Cubit {
   PaymentUseCase(this.repo):super(BaseRequestInitialState());
 
 
-    void execute(String token,String discountCode, String owner,int totalPrice)async{
+    void execute(String token,String discountCode, String owner,String totalPrice)async{
 
       Either<Failuer,PaymentResponse> either = await repo.paymentOnline(token, discountCode, owner, totalPrice);
 

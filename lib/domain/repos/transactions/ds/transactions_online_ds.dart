@@ -4,5 +4,5 @@ import 'package:graduation_project/data/model/responses/transactions/Transaction
 
 abstract class TransactionsOnlineDS{
 
-  Future<Either<Failuer, TransactionsResponse>> getTransactions(String token);
+  Future<Either<Failuer, TransactionsResponse>> getTransactions();
 }

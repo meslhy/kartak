@@ -1,10 +1,5 @@
-
-
-
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
-import 'package:graduation_project/data/model/responses/auth_response/auth_response.dart';
+import 'package:graduation_project/data/model/responses/auth_response/AuthResponse.dart';
 import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/domain/use_cases/get_places_use_case.dart';
 import 'package:graduation_project/domain/use_cases/get_profile_use_case.dart';

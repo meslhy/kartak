@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     viewModel.getUser();
-    viewModel.getPlaces();
+   viewModel.getPlaces();
     super.initState();
   }
 
@@ -82,7 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
               IconButton(
                 padding: const EdgeInsets.only(right: 15),
                 icon: const Icon(Icons.menu, color: Colors.white),
-                onPressed: () {},
+                onPressed: () {
+                  viewModel.logout(context);
+                },
               ),
             ],
           ),
@@ -98,9 +100,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     if(state is BaseRequestSuccessState){
                     return buildListOfPlaces(context,state.data);
                     }else if (state is BaseRequestErrorState){
-                    return  ErrorView(message:state.message ?? Constants.defaultErrorMessage);
+                    return  Center(child: ErrorView(message:state.message ?? Constants.defaultErrorMessage));
                 }else{
-                     return LoadingWidget();
+                     return Center(child: LoadingWidget());
                     }
                   }
                 )

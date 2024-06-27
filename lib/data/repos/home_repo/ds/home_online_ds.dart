@@ -37,7 +37,7 @@ class HomeOnlineDSImpl extends HomeOnlineDS{
   
   Future<Either<Failuer, PlaceDetailsResponse>> getSpecificPlace(String id) async{
    try{
-     Uri url = Uri.parse("https://kartak.onrender.com/api/place/$id");
+     Uri url = Uri.parse("https://${EndPoints.baseUrl}/api/place/$id");
      Response serverResponse = await get(url);
      PlaceDetailsResponse response = PlaceDetailsResponse.fromJson(jsonDecode(serverResponse.body));
 

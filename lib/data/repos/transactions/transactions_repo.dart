@@ -19,9 +19,9 @@ class TransactionsRepoImpl extends TransactionsRepo{
 
 
   @override
-  Future<Either<Failuer, TransactionsResponse>> getTransactions(String token) async{
+  Future<Either<Failuer, TransactionsResponse>> getTransactions() async{
     if(await connectivity.isInternetConnective){
-      return transactionsOnlineDS.getTransactions(token);
+      return transactionsOnlineDS.getTransactions();
     }else{
       return left(Failuer(Constants.internetErrorMessage));
     }

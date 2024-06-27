@@ -79,10 +79,10 @@ class TransactionData {
   String? place;
   String? paymentTypeMethod;
   String? paidAt;
-  int? totalPrice;
-  int? totalPriceAfterDiscount;
+  num? totalPrice;
+  num? totalPriceAfterDiscount;
   String? owner;
-  int? cashBack;
+  num? cashBack;
   String? createdAt;
   String? updatedAt;
   int? v;

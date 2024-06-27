@@ -2,8 +2,7 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
-import 'package:graduation_project/data/model/responses/auth_response/auth_response.dart';
-import 'package:graduation_project/data/model/responses/profile/ProfileResponse.dart';
+import 'package:graduation_project/data/model/responses/auth_response/AuthResponse.dart';
 import 'package:graduation_project/data/model/responses/users/AllUsersResponse.dart';
 import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/domain/repos/profile/ds/profile_online_ds.dart';
@@ -16,26 +15,28 @@ import 'package:injectable/injectable.dart';
 @Injectable(as: ProfileOnlineDS)
 class ProfileOnlineDSImpl extends ProfileOnlineDS {
 
- SharedPrefsUtils? sharedPrefsUtils;
+
 
 
   @override
-  Future<Either<Failuer, ProfileResponse>> getProfile() async{
+  Future<Either<Failuer, AuthResponse>> getProfile() async{
 
+    String? token = await SharedPrefsUtils().getToken();
    try{
      Uri url = Uri.https(EndPoints.baseUrl,EndPoints.profile);
+
+
 
      Response serverResponse = await get(
          url,
        headers: {
-           "authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjdiOWMyY2U5YjNhYTJhYWNiYzAyNGIiLCJpYXQiOjE3MTkzNzc0NjYsImV4cCI6MTcxOTQ2Mzg2Nn0.T2H-Gu9LN2VNHH5DqQFQNF9HPJ89NRtMK-fbi4gK-Vo"
+           "authorization":"Bearer $token"
        }
      );
 
-     ProfileResponse response = ProfileResponse.fromJson(jsonDecode(serverResponse.body));
+     AuthResponse response = AuthResponse.fromJson(jsonDecode(serverResponse.body));
 
-     print(response.data!.userData!.cloudImage!.url!);
-
+print(response.data);
      if(serverResponse.statusCode >=200 && serverResponse.statusCode <300){
        return right(response);
      }else{

@@ -19,9 +19,18 @@ class PaymentRepoImpl extends PaymentRepo{
   PaymentRepoImpl(this.paymentOnlineDS,this.connectivity);
 
   @override
-  Future<Either<Failuer, PaymentResponse>> paymentOnline(String token, String discountCode, String owner, int totalPrice) async{
+  Future<Either<Failuer, PaymentResponse>> paymentOnline(String token, String discountCode, String owner, String totalPrice) async{
     if(await connectivity.isInternetConnective){
       return paymentOnlineDS.paymentOnline(token, discountCode, owner, totalPrice);
+    }else{
+      return left(Failuer(Constants.internetErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failuer, PaymentResponse>> paymentCash(String discountCode, String owner, String totalPrice) async{
+    if(await connectivity.isInternetConnective){
+      return paymentOnlineDS.paymentCash(discountCode, owner, totalPrice);
     }else{
       return left(Failuer(Constants.internetErrorMessage));
     }

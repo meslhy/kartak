@@ -9,6 +9,7 @@ class TransactionCard extends StatelessWidget {
   String date;
   String totalPrice;
   String totalPriceAfterDiscount;
+  String imagUrl;
 
 
   TransactionCard({
@@ -19,6 +20,7 @@ class TransactionCard extends StatelessWidget {
     required this.date,
     required this.payMethod,
     required this.totalPriceAfterDiscount,
+    required this.imagUrl,
   });
 
   @override
@@ -31,9 +33,9 @@ class TransactionCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            const CircleAvatar(
+             CircleAvatar(
               radius: 30,
-              backgroundImage: NetworkImage('https://scontent.fcai20-3.fna.fbcdn.net/v/t39.30808-6/441926384_1599193970904223_1116018309001295735_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEbu5tVVUlecfAG2xBsCk4Nz4jBRESM2IrPiMFERIzYiqNXR1MgCkmCrr55ikyNzGbDG9P4tIRU9r6UlOcnDcMh&_nc_ohc=sXUQVw0ONUcQ7kNvgEAONPF&_nc_ht=scontent.fcai20-3.fna&oh=00_AYAa_QJCImtg50u-aKjZql2vVWw2RHoRhdvp74wFmQ15ow&oe=667D9D83'),
+              backgroundImage: NetworkImage(imagUrl??""),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,

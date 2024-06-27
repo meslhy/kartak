@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
 import 'package:graduation_project/data/model/responses/transactions/TransactionsResponse.dart';
+import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/domain/repos/transactions/ds/transactions_online_ds.dart';
 import 'package:graduation_project/ui/utils/constants.dart';
 import 'package:graduation_project/ui/utils/end_points.dart';
@@ -14,8 +15,10 @@ import 'package:injectable/injectable.dart';
  class TransactionsOnlineDSImpl extends TransactionsOnlineDS{
 
 
+
   @override
-  Future<Either<Failuer, TransactionsResponse>> getTransactions(String token) async{
+  Future<Either<Failuer, TransactionsResponse>> getTransactions() async{
+    String? token = await SharedPrefsUtils().getToken();
     try{
 
       Uri url = Uri.https(EndPoints.baseUrl,EndPoints.userTransactions);

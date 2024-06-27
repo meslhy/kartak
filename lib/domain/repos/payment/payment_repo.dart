@@ -7,6 +7,7 @@ import 'package:graduation_project/data/model/responses/payment/PaymentResponse.
 
 abstract class PaymentRepo{
 
-  Future<Either<Failuer,PaymentResponse>> paymentOnline(String token , String discountCode , String owner , int totalPrice);
+  Future<Either<Failuer,PaymentResponse>> paymentOnline(String token , String discountCode , String owner , String totalPrice);
+  Future<Either<Failuer,PaymentResponse>> paymentCash( String discountCode , String owner , String totalPrice);
 
 }

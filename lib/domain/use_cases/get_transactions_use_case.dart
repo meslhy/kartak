@@ -16,9 +16,9 @@ class GetTransactionsUseCase extends Cubit{
 
   GetTransactionsUseCase(this.repo):super(BaseRequestInitialState());
 
-  execute(String token)async{
+  execute()async{
 
-    Either either =await repo.getTransactions(token);
+    Either either =await repo.getTransactions();
 
     either.fold(
             (failure) => emit(BaseRequestErrorState(failure.errorMessage)),

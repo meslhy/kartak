@@ -73,7 +73,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                         Column(
                           children: [
                             header(fixedColor , place.name??""),
-                            discountBanner(fixedColor , "${place.discount??""}"),
+                            discountBanner(fixedColor , place.owner??""),
                           ],
                         ),
                         Positioned(
@@ -95,7 +95,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                     reviewsCommentList(fixedColor),
                     locationSection(fixedColor),
                     ownerSection(fixedColor,place.owner??""),
-                    applyDiscountButton(),
+                    applyDiscountButton(place.owner??""),
                   ],
                 ),
               );
@@ -330,7 +330,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
     );
   }
 
-  Widget applyDiscountButton() {
+
+  Widget applyDiscountButton(String owner) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
       child: ElevatedButton(
@@ -372,26 +373,29 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                         ),
                       ),
                     ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CashPaymentPage(),
-                          ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.attach_money,
-                        color: Color.fromRGBO(227, 163, 22, 1),
-                      ), // Cash icon
-                      label: const Text('Cash Payment',
-                          style: TextStyle(
-                              color: Color.fromRGBO(227, 163, 22, 1))),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(
-                            255, 0, 0, 0), // Background color
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>  CashPaymentPage(owner:owner ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.attach_money,
+                          color: Color.fromRGBO(227, 163, 22, 1),
+                        ), // Card icon
+                        label: const Text('Cash Payment',
+                            style: TextStyle(
+                                color: Color.fromRGBO(227, 163, 22, 1))),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(
+                              255, 0, 0, 0), // Background color
+                        ),
                       ),
                     ),
                   ],

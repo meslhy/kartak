@@ -27,46 +27,35 @@ class _SplashScreenState extends State<SplashScreen> {
   SplashViewModel viewModel = getIt();
   @override
   void initState() {
-    //viewModel.getProfileInf();
     super.initState();
+    Future.delayed(const Duration(seconds: 2),()async{
+
+      if(await SharedPrefsUtils().getToken() == ""){
+        Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+      }else{
+        Navigator.pushReplacementNamed(context, MainScreen.routeName);
+      }
+
+    });
     SharedPreferenceGlobal.putData(key: "lastIndex", data: 0);
   }
   @override
   Widget build(BuildContext context) {
-    return  BlocListener(
-      bloc: viewModel,
-      listener:(context, state) {
-       if(state is BaseRequestErrorState && state.message == "token is invalid" ){
-         Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-       } else{
-         Future.delayed(const Duration(seconds: 2),()async{
-           var prefs = getIt<SharedPrefsUtils>();
-           String? token = await prefs.getToken();
-           if(token == ""){
-             Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-           }else{
-             Navigator.pushReplacementNamed(context, MainScreen.routeName);
-           }
-
-         });
-       }
-      },
-      child: Scaffold(
-        body: Container(
-          color: AppColors.primary,
-          child: const Center(
-            child: Text(
-              "Kartak",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 28,
-                  color: AppColors.white
-              ),
+    return  Scaffold(
+      body: Container(
+        color: AppColors.primary,
+        child: const Center(
+          child: Text(
+            "Kartak",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+                color: AppColors.white
             ),
           ),
         ),
-        backgroundColor :  AppColors.black,
       ),
+      backgroundColor :  AppColors.black,
     );
   }
 }

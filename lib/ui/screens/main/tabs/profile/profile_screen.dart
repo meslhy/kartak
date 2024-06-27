@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:graduation_project/data/model/responses/auth_response/AuthResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
-import 'package:graduation_project/data/model/responses/profile/ProfileResponse.dart';
 import 'package:graduation_project/data/model/responses/users/AllUsersResponse.dart';
 import 'package:graduation_project/domain/di/di.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/profile_view_model.dart';
@@ -32,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int itemsToShow = 2;
   List<int> items = List.generate(20, (index) => index + 1);
   bool _isExpanded = false;
-  late ProfileData data;
+  late AuthData data;
   String role = "";
   int? countOfUsers ;
   late int countOfPlaces ;
@@ -57,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
          print(state );
           if(state is BaseRequestSuccessState){
              data = state.data;
-             role = "admin";
+             role = state.data.role!;
             return SingleChildScrollView(
                 child: Container(
                   color: Colors.white,
@@ -68,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         margin: const EdgeInsets.only(top: 80, bottom: 15),
                         child: CircleAvatar(
                           radius: 70,
-                          backgroundImage: NetworkImage(data.userData!.cloudImage!.url!),
+                          backgroundImage: NetworkImage(data.cloudImage!.url!),
                         ),
 
                       ),
@@ -135,8 +135,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _loadMoreItemsOfPlaces() {
     setState(() {
       itemsToShow += 2;
-      if (itemsToShow > countOfPlaces!) {
-        itemsToShow = countOfPlaces!;
+      if (itemsToShow > countOfPlaces) {
+        itemsToShow = countOfPlaces;
       }
     });
   }
@@ -157,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               width: 20,
             ),
              Text(
-              data.userData!.name??"",
+              data.name??"",
               style: TextStyle(
                 fontSize: 20,
                 decoration: TextDecoration.none,
@@ -174,13 +174,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
          Text(
-            data.userData!.email??"",
+            data.email??"",
             style: const TextStyle(
                 fontSize: 12,
                 decoration: TextDecoration.none,
                 color: Colors.black)),
          Text(
-             data.userData!.phone??"",
+             data.phone??"",
             style: TextStyle(
                 fontSize: 12,
                 decoration: TextDecoration.none,
@@ -188,6 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
+
 
   Widget _buildAdminArea() {
     return Container(
@@ -214,6 +215,82 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+  Widget _buildOwnerArea() {
+    return Container(
+        margin: const EdgeInsets.only(top: 25),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(243, 230, 209, 0.7),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 150,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: const DecorationImage(
+                      image: NetworkImage(
+                          'https://i.pinimg.com/564x/15/1e/21/151e212952323aeb23f3606e2a32df5f.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                    backgroundColor: Colors.black,
+                    // Button color
+                  ),
+                  child: const Text(
+                    'Go To Place',
+                    style: TextStyle(color: Colors.white,fontSize: 18),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              'Café & Restaurants',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color.fromRGBO(227, 163, 22, 1),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 10, bottom: 25),
+              child: _buildDescription(),
+            ),
+          ],
+        ));
+  }
+  Widget _buildUserArea() {
+    return Container(
+        margin: const EdgeInsets.only(top: 25),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(243, 230, 209, 0.7),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+          ],
+        ));
+  }
+
+
 
   Widget _buildToggleButtons() {
     return Row(
@@ -275,6 +352,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               } else if (index == itemsToShow && itemsToShow < places.length) {
                 return _loadMoreButton(_loadMoreItemsOfPlaces);
               }
+              return null;
+
             },
           );
         }else if(state is BaseRequestErrorState){
@@ -296,65 +375,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildOwnerArea() {
-    return Container(
-        margin: const EdgeInsets.only(top: 25),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(243, 230, 209, 0.7),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 150,
-                  width: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      image: NetworkImage(
-                          'https://i.pinimg.com/564x/15/1e/21/151e212952323aeb23f3606e2a32df5f.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                    backgroundColor: Colors.black,
-                    // Button color
-                  ),
-                  child: const Text(
-                    'Go To Place',
-                    style: TextStyle(color: Colors.white,fontSize: 18),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              'Café & Restaurants',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(227, 163, 22, 1),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 10, bottom: 25),
-              child: _buildDescription(),
-            ),
-          ],
-        ));
-  }
 
 
   Widget _buildDescription() {
@@ -408,6 +428,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               } else if (index == itemsToShow && itemsToShow < users.length) {
                 return _loadMoreButton(_loadMoreItemsOfUsers);
               }
+              return null;
             },
           );
         }else if(state is BaseRequestErrorState){
@@ -419,65 +440,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildUserArea() {
-    return Container(
-        margin: const EdgeInsets.only(top: 25),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(243, 230, 209, 0.7),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 150,
-                  width: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      image: NetworkImage(
-                          'https://i.pinimg.com/564x/15/1e/21/151e212952323aeb23f3606e2a32df5f.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                    backgroundColor: Colors.black,
-                    // Button color
-                  ),
-                  child: const Text(
-                    'Go To Place',
-                    style: TextStyle(color: Colors.white,fontSize: 18),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              'Café & Restaurants',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(227, 163, 22, 1),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 10, bottom: 25),
-              child: _buildDescription(),
-            ),
-          ],
-        ));
-  }
+
 }
 
 

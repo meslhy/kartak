@@ -32,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return  BlocListener(
       bloc: viewModel,
       listener: (context, state){
+        print("state of register is $state");
         if(state is BaseRequestLoadingState){
           showLoading(context);
         }else if (state is BaseRequestSuccessState){

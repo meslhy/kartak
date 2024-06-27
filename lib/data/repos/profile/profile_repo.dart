@@ -1,7 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
-import 'package:graduation_project/data/model/responses/profile/ProfileResponse.dart';
 import 'package:graduation_project/data/model/responses/users/AllUsersResponse.dart';
 import 'package:graduation_project/ui/utils/constants.dart';
 import 'package:graduation_project/ui/utils/extensions.dart';
@@ -9,6 +8,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../domain/repos/profile/ds/profile_online_ds.dart';
 import '../../../domain/repos/profile/profile_repo.dart';
+import '../../model/responses/auth_response/AuthResponse.dart';
 
 @Injectable(as:ProfileRepo )
 class ProfileRepoImpl extends ProfileRepo{
@@ -19,7 +19,7 @@ class ProfileRepoImpl extends ProfileRepo{
   ProfileRepoImpl(this.connectivity,this.profileOnlineDS);
 
   @override
-  Future<Either<Failuer, ProfileResponse>> getProfile() async{
+  Future<Either<Failuer, AuthResponse>> getProfile() async{
 
     if(await connectivity.isInternetConnective){
       return profileOnlineDS.getProfile();

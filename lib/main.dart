@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/shared_locale/helper.dart';
 import 'package:graduation_project/ui/screens/auth/forget_pass/otp/otp_screen.dart';
 import 'package:graduation_project/ui/screens/auth/forget_pass/send_otp/send_otp_screen.dart';
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
         SendOtpScreen.routeName :(context) => const SendOtpScreen(),
         TransactionScreen.routeName :(context) =>  TransactionScreen(),
       },
-      initialRoute: ProfileScreen.routeName,
+      initialRoute:SplashScreen.routeName,
     );
   }
 }

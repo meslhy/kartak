@@ -6,7 +6,8 @@ Widget buildTextField({
 }) {
   return TextFormField(
     controller: controller,
-    cursorColor: Color.fromRGBO(227, 163, 22, 1), // Set the cursor color
+    undoController:UndoHistoryController(value:UndoHistoryValue.empty ) ,
+    cursorColor: const Color.fromRGBO(227, 163, 22, 1), // Set the cursor color
     decoration: InputDecoration(
       labelText: labelText,
       floatingLabelStyle: TextStyle(color: Color.fromRGBO(227, 163, 22, 1)),
@@ -21,7 +22,7 @@ Widget buildTextField({
         borderSide: BorderSide(color: Color.fromRGBO(227, 163, 22, 1)),
       ),
     ),
-    style: TextStyle(
+    style: const TextStyle(
       decoration: TextDecoration.none, // Ensure no underline on the input text
     ),
   );

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import 'package:graduation_project/data/model/responses/auth_response/auth_response.dart';
+import 'package:graduation_project/data/model/responses/auth_response/AuthResponse.dart';
 import 'package:graduation_project/ui/utils/end_points.dart';
 import 'package:graduation_project/ui/utils/extensions.dart';
 import 'package:http/http.dart';
@@ -86,7 +86,7 @@ class AuthRepoImpl extends AuthRepo {
     final connectivityResult = await (connectivity.checkConnectivity());
     if(connectivityResult ==ConnectivityResult.wifi ||connectivityResult ==ConnectivityResult.mobile){
       try {
-        var formData = MultipartRequest('POST', Uri.parse("https://kartak.onrender.com/api/user"));
+        var formData = MultipartRequest('POST', Uri.parse("https://${EndPoints.baseUrl}/api/user"));
         formData.fields.addAll({
           'name': name,
           'email': email,
@@ -103,11 +103,12 @@ class AuthRepoImpl extends AuthRepo {
           contentType: MediaType('image', 'png'),
         ));
 
-        print(formData.fields);
+        print(" file is ::: ${formData.fields}");
 
         Response serverResponse = await Response.fromStream(await formData.send());
         AuthResponse response = AuthResponse.fromJson(
             jsonDecode(serverResponse.body));
+        print(" body is ::: ${serverResponse.body}");
         if (serverResponse.statusCode >= 200 &&
             serverResponse.statusCode < 300) {
 
@@ -161,7 +162,7 @@ class AuthRepoImpl extends AuthRepo {
 
         }
       }catch(e,ee){
-        print(ee);
+        print("error is $e in $ee");
         return left(Failuer(e.toString()));
       }
     } else {

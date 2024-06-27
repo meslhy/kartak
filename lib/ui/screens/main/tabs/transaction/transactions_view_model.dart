@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:graduation_project/domain/use_cases/get_profile_use_case.dart';
 import 'package:graduation_project/domain/use_cases/get_transactions_use_case.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:injectable/injectable.dart';
@@ -8,12 +9,17 @@ import 'package:injectable/injectable.dart';
 class TransactionsViewModel extends Cubit{
 
   GetTransactionsUseCase getTransactionsUseCase;
+  GetProfileUseCase getProfileUseCase;
 
-  TransactionsViewModel(this.getTransactionsUseCase):super(BaseRequestInitialState());
+  TransactionsViewModel(this.getTransactionsUseCase,this.getProfileUseCase):super(BaseRequestInitialState());
 
 
-  getTransactions(String token){
-    return getTransactionsUseCase.execute(token);
+  getTransactions(){
+    return getTransactionsUseCase.execute();
+  }
+
+  getProfile(){
+    return getProfileUseCase.execute();
   }
 
 
