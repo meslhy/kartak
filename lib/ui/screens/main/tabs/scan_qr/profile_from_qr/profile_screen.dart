@@ -7,36 +7,37 @@ import 'package:graduation_project/data/model/responses/places_response/places_r
 import 'package:graduation_project/data/model/responses/users/AllUsersResponse.dart';
 import 'package:graduation_project/domain/di/di.dart';
 import 'package:graduation_project/ui/screens/auth/login/login_screen.dart';
-import 'package:graduation_project/ui/screens/main/tabs/profile/profile_view_model.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/update_picture/update_picture_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/widgets/placecard.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/widgets/usercard.dart';
-import 'package:graduation_project/ui/utils/app_colors.dart';
+import 'package:graduation_project/ui/screens/main/tabs/scan_qr/profile_from_qr/profile_view_model.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:graduation_project/ui/widgets/loading_widget.dart';
 
 
-class ProfileScreen extends StatefulWidget {
+class ProfileFromQRScreen extends StatefulWidget {
+
+
   static const routeName = "ProfileScreen";
+  String id ;
 
-
-  const ProfileScreen({super.key});
+   ProfileFromQRScreen({super.key , required this.id});
 
 
 
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileFromQRScreen> createState() => _ProfileFromQRScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileFromQRScreenState extends State<ProfileFromQRScreen> {
 
-  ProfileViewModel viewModel = getIt();
+  ProfileFromQRViewModel viewModel = getIt();
   bool showPlaces = true;
   int itemsToShow = 2;
   List<int> items = List.generate(20, (index) => index + 1);
   bool _isExpanded = false;
-  late AuthData data;
+
   String role = "";
   int? countOfUsers ;
   late int countOfPlaces ;
@@ -47,7 +48,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState(){
     viewModel.getAllPlaces();
     viewModel.getAllUsers();
-    viewModel.getProfileInf();
+    viewModel.getProfileUser(widget.id);
+
     super.initState();
   }
   @override
@@ -56,12 +58,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       body: BlocBuilder(
-       bloc:viewModel.getProfileUseCase ,
+       bloc:viewModel.getSpecificUserUseCase ,
         builder: (context, state) {
          print(state );
           if(state is BaseRequestSuccessState){
-             data = state.data;
-             role = data.role??"user";
+            print("code response is ${state.data}");
+             AuthData data = state.data;
+             print("code response is ${data.email}");
             return SingleChildScrollView(
                 child: Container(
                   color: Colors.white,
@@ -81,39 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         ),
                       ),
-                      _buildProfileInfo(),
-                      if(role != "user")  SizedBox(height: 5,),
-                      if(role != "user") InkWell(
-                        onTap: (){
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: Container(
-                                  color: AppColors.white,
-                                  child: BarcodeWidget(
-                                    barcode: Barcode.qrCode(),
-                                    data: data.id??"",
-                                    height: MediaQuery.of(context).size.width *0.4,
-                                    width: MediaQuery.of(context).size.width *0.4,
-                                  ),
-                                ),
-
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          color: const Color.fromRGBO(243, 230, 209, 0.7),
-                          padding: const EdgeInsets.only(bottom: 10),
-
-                          child: Icon(
-                              Icons.qr_code
-                          ),
-                        ),
-                      ),
+                      _buildProfileInfo(data),
                       if (role == "admin") _buildAdminArea(data),
                       if (role == "owner") _buildOwnerArea(data),
                       if (role == "user") _buildUserArea(data),
@@ -190,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  Widget _buildProfileInfo() {
+  Widget _buildProfileInfo(AuthData data) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

@@ -28,16 +28,18 @@ import '../../ui/screens/auth/forget_pass/send_otp/send_otp_view_model.dart'
     as _i35;
 import '../../ui/screens/auth/login/login_view_model.dart' as _i26;
 import '../../ui/screens/auth/signup/register_view_model.dart' as _i33;
-import '../../ui/screens/main/main_screen_view_model.dart' as _i45;
-import '../../ui/screens/main/tabs/home/home_view_model.dart' as _i44;
+import '../../ui/screens/main/main_screen_view_model.dart' as _i46;
+import '../../ui/screens/main/tabs/home/home_view_model.dart' as _i45;
 import '../../ui/screens/main/tabs/home/place_details/place_details_view_model.dart'
-    as _i46;
-import '../../ui/screens/main/tabs/profile/profile_view_model.dart' as _i47;
+    as _i47;
+import '../../ui/screens/main/tabs/profile/profile_view_model.dart' as _i49;
 import '../../ui/screens/main/tabs/profile/update_picture/update_picture_view_model.dart'
-    as _i49;
+    as _i51;
+import '../../ui/screens/main/tabs/scan_qr/profile_from_qr/profile_view_model.dart'
+    as _i48;
 import '../../ui/screens/main/tabs/scan_qr/scan_qr_view_model.dart' as _i10;
 import '../../ui/screens/main/tabs/transaction/transactions_view_model.dart'
-    as _i48;
+    as _i50;
 import '../../ui/screens/payment/cash_payment/cash_payment_view_model.dart'
     as _i39;
 import '../../ui/screens/payment/payment_details/payment_details_view_model.dart'
@@ -56,7 +58,8 @@ import '../use_cases/get_places_use_case.dart' as _i40;
 import '../use_cases/get_profile_use_case.dart' as _i41;
 import '../use_cases/get_specific_place_use_case.dart' as _i42;
 import '../use_cases/get_transactions_use_case.dart' as _i20;
-import '../use_cases/get_users_use_case.dart' as _i43;
+import '../use_cases/get_users_use_case.dart' as _i44;
+import '../use_cases/get_specific_user_use_case.dart' as _i43;
 import '../use_cases/login_use_case.dart' as _i25;
 import '../use_cases/payment_cash_use_case.dart' as _i27;
 import '../use_cases/payment_use_case.dart' as _i9;
@@ -64,7 +67,7 @@ import '../use_cases/register_use_case.dart' as _i32;
 import '../use_cases/send_otp_use_case.dart' as _i34;
 import '../use_cases/update_photo_use_case.dart' as _i36;
 import '../use_cases/verification_otp_use_case.dart' as _i37;
-import 'app_module.dart' as _i50;
+import 'app_module.dart' as _i52;
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -144,28 +147,36 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i41.GetProfileUseCase(gh<_i30.ProfileRepo>()));
     gh.factory<_i42.GetSpecificPlacesUseCase>(
         () => _i42.GetSpecificPlacesUseCase(gh<_i23.HomeRepo>()));
-    gh.factory<_i43.GetUsersUseCase>(
-        () => _i43.GetUsersUseCase(gh<_i30.ProfileRepo>()));
-    gh.factory<_i44.HomeViewModel>(
-        () => _i44.HomeViewModel(gh<_i40.GetPlacesUseCase>()));
-    gh.factory<_i45.MainViewModel>(() => _i45.MainViewModel(
+    gh.factory<_i43.GetSpecificUserUseCase>(
+        () => _i43.GetSpecificUserUseCase(gh<_i30.ProfileRepo>()));
+    gh.factory<_i44.GetUsersUseCase>(
+        () => _i44.GetUsersUseCase(gh<_i30.ProfileRepo>()));
+    gh.factory<_i45.HomeViewModel>(
+        () => _i45.HomeViewModel(gh<_i40.GetPlacesUseCase>()));
+    gh.factory<_i46.MainViewModel>(() => _i46.MainViewModel(
           gh<_i11.SharedPreferenceGlobal>(),
           gh<_i9.PaymentUseCase>(),
           gh<_i40.GetPlacesUseCase>(),
         ));
-    gh.factory<_i46.PlaceDetailsViewModel>(
-        () => _i46.PlaceDetailsViewModel(gh<_i42.GetSpecificPlacesUseCase>()));
-    gh.factory<_i47.ProfileViewModel>(() => _i47.ProfileViewModel(
+    gh.factory<_i47.PlaceDetailsViewModel>(
+        () => _i47.PlaceDetailsViewModel(gh<_i42.GetSpecificPlacesUseCase>()));
+    gh.factory<_i48.ProfileFromQRViewModel>(() => _i48.ProfileFromQRViewModel(
+          gh<_i12.SharedPrefsUtils>(),
+          gh<_i40.GetPlacesUseCase>(),
+          gh<_i44.GetUsersUseCase>(),
+          gh<_i43.GetSpecificUserUseCase>(),
+        ));
+    gh.factory<_i49.ProfileViewModel>(() => _i49.ProfileViewModel(
           gh<_i12.SharedPrefsUtils>(),
           gh<_i41.GetProfileUseCase>(),
           gh<_i40.GetPlacesUseCase>(),
-          gh<_i43.GetUsersUseCase>(),
+          gh<_i44.GetUsersUseCase>(),
         ));
-    gh.factory<_i48.TransactionsViewModel>(() => _i48.TransactionsViewModel(
+    gh.factory<_i50.TransactionsViewModel>(() => _i50.TransactionsViewModel(
           gh<_i20.GetTransactionsUseCase>(),
           gh<_i41.GetProfileUseCase>(),
         ));
-    gh.factory<_i49.UpdatePictureViewModel>(() => _i49.UpdatePictureViewModel(
+    gh.factory<_i51.UpdatePictureViewModel>(() => _i51.UpdatePictureViewModel(
           gh<_i41.GetProfileUseCase>(),
           gh<_i36.UpdatePhotoUseCase>(),
         ));
@@ -173,4 +184,4 @@ extension GetItInjectableX on _i1.GetIt {
   }
 }
 
-class _$AppModule extends _i50.AppModule {}
+class _$AppModule extends _i52.AppModule {}

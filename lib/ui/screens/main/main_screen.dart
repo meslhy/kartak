@@ -87,8 +87,8 @@ class _MainScreenState extends State<MainScreen> {
     currentIndex: viewModel.indexTab,
     items: [
       FloatingNavbarItem(icon: Icons.home, title: 'Home'),
-      FloatingNavbarItem(icon: Icons.explore, title: 'Explore'),
-      FloatingNavbarItem(icon: Icons.chat_bubble_outline, title: 'Chats'),
+      FloatingNavbarItem(icon: Icons.attach_money, title: 'cashBack'),
+      FloatingNavbarItem(icon: Icons.qr_code, title: 'ScanQR'),
       FloatingNavbarItem(icon: Icons.person, title: 'Profile'),
     ],
   );

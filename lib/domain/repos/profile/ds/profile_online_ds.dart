@@ -9,5 +9,6 @@ abstract class ProfileOnlineDS {
 
   Future<Either<Failuer,AuthResponse>>getProfile();
   Future<Either<Failuer,AllUsersResponse>>getAllUsers();
+  Future<Either<Failuer, AuthResponse>> getSpecificUsers(String id);
   Future<Either<Failuer,bool>>updatePhoto( File image);
 }

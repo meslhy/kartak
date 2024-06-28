@@ -74,6 +74,25 @@ print(response.data);
   }
 
   @override
+  Future<Either<Failuer, AuthResponse>> getSpecificUsers(String id) async{
+    try{
+      Uri url = Uri.parse("https://${EndPoints.baseUrl}${EndPoints.users}/$id");
+      Response serverResponse = await get(url);
+      AuthResponse response = AuthResponse.fromJson(jsonDecode(serverResponse.body));
+
+      print(serverResponse.body);
+
+      if(serverResponse.statusCode >= 200 && serverResponse.statusCode < 300){
+        return right(response);
+      }else{
+        return left(Failuer(response.message?? Constants.defaultErrorMessage));
+      }
+    }catch(e,ee){
+      return left(Failuer(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failuer,bool>> updatePhoto( File image) async{
 
     String token = await SharedPrefsUtils().getToken()??"";

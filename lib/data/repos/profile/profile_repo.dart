@@ -49,5 +49,14 @@ class ProfileRepoImpl extends ProfileRepo{
    }
   }
 
+  @override
+  Future<Either<Failuer, AuthResponse>> getSpecificUsers(String id) async{
+    if(await connectivity.isInternetConnective){
+      return profileOnlineDS.getSpecificUsers(id);
+    }else{
+      return left(Failuer(Constants.internetErrorMessage));
+    }
+  }
+
 
 }

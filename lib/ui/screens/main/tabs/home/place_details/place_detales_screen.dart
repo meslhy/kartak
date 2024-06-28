@@ -295,19 +295,14 @@ class _PlaceDetailsState extends State<PlaceDetails> {
   Widget locationSection(Color fixedColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child:   Column(
+      child:    Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeadlineTextWidget(
+          const HeadlineTextWidget(
             text: 'Location',
           ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Container(
-              width: 100,
-              height: 100,
-            ),
-          ),
+
+
         ],
       ),
     );

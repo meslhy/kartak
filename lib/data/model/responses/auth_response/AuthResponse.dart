@@ -11,6 +11,7 @@ class AuthResponse {
   AuthResponse.fromJson(dynamic json) {
     status = json['status'];
     data = json['Data'] != null ? AuthData.fromJson(json['Data']) : null;
+    data ??= json['data'] != null ? AuthData.fromJson(json['data']) : null;
     token = json['token'];
     message = json['message'];
   }
