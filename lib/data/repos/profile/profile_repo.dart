@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
@@ -36,6 +38,15 @@ class ProfileRepoImpl extends ProfileRepo{
     }else{
       return left(Failuer(Constants.internetErrorMessage));
     }
+  }
+
+  @override
+  Future<Either<Failuer, bool>> updatePhoto(File image) async{
+   if(await connectivity.isInternetConnective){
+     return profileOnlineDS.updatePhoto(image);
+   }else{
+     return left(Failuer(Constants.internetErrorMessage));
+   }
   }
 
 

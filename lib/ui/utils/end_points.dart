@@ -10,5 +10,6 @@ abstract class EndPoints {
   static String verificationOTP = "/api/v1/users/verifyResetCode";
   static String userTransactions = "/api/order/loggedUser";
   static String profile = "/api/auth/currentUser";
+  static String updatePhoto = "/api/user/profilePhotoChange";
 
 }

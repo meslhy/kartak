@@ -5,6 +5,7 @@ import 'package:graduation_project/domain/use_cases/get_places_use_case.dart';
 import 'package:graduation_project/domain/use_cases/payment_use_case.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/home_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/profile_screen.dart';
+import 'package:graduation_project/ui/screens/main/tabs/scan_qr/scan_qr_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/transaction/transaction_screen.dart';
 import 'package:injectable/injectable.dart';
 import '../../../shared_locale/helper.dart';
@@ -21,7 +22,7 @@ class MainViewModel extends Cubit {
   List<Widget> screens=[
     const HomeScreen(),
      TransactionScreen(),
-    const HomeScreen(),
+     ScanQRScreen(),
     const ProfileScreen(),
   ];
 

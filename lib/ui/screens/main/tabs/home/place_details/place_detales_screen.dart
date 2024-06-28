@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:graduation_project/data/model/responses/places_response/placeDetailsResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/domain/di/di.dart';
+import 'package:graduation_project/ui/screens/auth/login/login_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/place_details/place_details_view_model.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/place_details/widgets/head_line_text_widget.dart';
 import 'package:graduation_project/ui/screens/payment/cash_payment/cash_payment_screen.dart';
@@ -99,8 +100,11 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                   ],
                 ),
               );
-
-          }else if (state is BaseRequestErrorState){
+          }
+          else if (state is BaseRequestErrorState){
+            if(state.message =="jwt expired"){
+              Navigator.pushNamed(context, LoginScreen.routeName);
+            }
             return  ErrorView(message:state.message ?? Constants.defaultErrorMessage);
           }else{
             return Center(child: LoadingWidget(),);

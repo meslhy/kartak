@@ -1,3 +1,4 @@
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,7 +6,9 @@ import 'package:graduation_project/data/model/responses/auth_response/AuthRespon
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/data/model/responses/users/AllUsersResponse.dart';
 import 'package:graduation_project/domain/di/di.dart';
+import 'package:graduation_project/ui/screens/auth/login/login_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/profile_view_model.dart';
+import 'package:graduation_project/ui/screens/main/tabs/profile/update_picture/update_picture_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/widgets/placecard.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/widgets/usercard.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
@@ -64,18 +67,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 80, bottom: 15),
-                        child: CircleAvatar(
-                          radius: 70,
-                          backgroundImage: NetworkImage(data.cloudImage!.url!),
-                        ),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.popAndPushNamed(context, UpdatePictureScreen.routeName);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 80, bottom: 15),
+                          child: CircleAvatar(
+                            radius: 70,
+                            backgroundImage: NetworkImage(data.cloudImage!.url!),
+                          ),
 
+                        ),
                       ),
                       _buildProfileInfo(),
-                      if (role == "admin") _buildAdminArea(),
-                      if (role == "owner") _buildOwnerArea(),
-                      if (role == "user") _buildUserArea(),
+                      if (role == "admin") _buildAdminArea(data),
+                      if (role == "owner") _buildOwnerArea(data),
+                      if (role == "user") _buildUserArea(data),
                       Container(
                         margin: const EdgeInsets.only(top: 20),
                         child: Row(
@@ -114,6 +122,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               );
 
           }else if(state is BaseRequestErrorState){
+            if(state.message =="jwt expired"){
+              Navigator.pushNamed(context, LoginScreen.routeName);
+            }
             return Center(child: Text(state.message),);
           }else{
             return Center(child: LoadingWidget(),);
@@ -190,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
 
-  Widget _buildAdminArea() {
+  Widget _buildAdminArea(AuthData user) {
     return Container(
       padding: const EdgeInsets.only(bottom: 10),
       margin: const EdgeInsets.only(top: 25, bottom: 10),
@@ -215,7 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  Widget _buildOwnerArea() {
+  Widget _buildOwnerArea(AuthData user) {
     return Container(
         margin: const EdgeInsets.only(top: 25),
         padding: const EdgeInsets.all(16),
@@ -274,7 +285,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ));
   }
-  Widget _buildUserArea() {
+  Widget _buildUserArea(AuthData user) {
     return Container(
         margin: const EdgeInsets.only(top: 25),
         padding: const EdgeInsets.all(16),
@@ -285,7 +296,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
+            BarcodeWidget(
+            barcode: Barcode.qrCode(),
+              data: user.id??"",
+              height: MediaQuery.of(context).size.width *0.4,
+              width: MediaQuery.of(context).size.width *0.4,
+    )
           ],
         ));
   }

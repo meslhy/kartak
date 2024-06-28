@@ -9,6 +9,7 @@ import 'package:graduation_project/ui/screens/main/main_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/home_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/profile_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/update_picture/update_picture_screen.dart';
+import 'package:graduation_project/ui/screens/main/tabs/scan_qr/scan_qr_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/transaction/transaction_screen.dart';
 
 import 'package:graduation_project/ui/screens/splash/splash_screen.dart';
@@ -37,13 +38,14 @@ class MyApp extends StatelessWidget {
         SplashScreen.routeName :(context) => const SplashScreen(),
         LoginScreen.routeName :(context) => const LoginScreen(),
         RegisterScreen.routeName: (context) => const RegisterScreen(),
-         ProfileScreen.routeName:(context) => ProfileScreen(),
-        // UpdatePictureScreen.routeName:(context) => UpdatePictureScreen(),
+        ProfileScreen.routeName:(context) => ProfileScreen(),
+        UpdatePictureScreen.routeName:(context) => UpdatePictureScreen(),
         MainScreen.routeName :(context) => const MainScreen(),
         HomeScreen.routeName :(context) => const HomeScreen(),
         VerificationOTPScreen.routeName :(context) => const VerificationOTPScreen(),
         SendOtpScreen.routeName :(context) => const SendOtpScreen(),
         TransactionScreen.routeName :(context) =>  TransactionScreen(),
+        ScanQRScreen.routeName :(context) =>  ScanQRScreen(),
       },
       initialRoute:SplashScreen.routeName,
     );

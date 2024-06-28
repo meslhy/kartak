@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
@@ -9,14 +10,16 @@ import 'package:graduation_project/domain/repos/profile/ds/profile_online_ds.dar
 import 'package:graduation_project/ui/utils/constants.dart';
 import 'package:graduation_project/ui/utils/end_points.dart';
 import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:injectable/injectable.dart';
 
 
 @Injectable(as: ProfileOnlineDS)
 class ProfileOnlineDSImpl extends ProfileOnlineDS {
 
+  SharedPrefsUtils sharedPrefsUtils;
 
-
+  ProfileOnlineDSImpl(this.sharedPrefsUtils);
 
   @override
   Future<Either<Failuer, AuthResponse>> getProfile() async{
@@ -38,6 +41,9 @@ class ProfileOnlineDSImpl extends ProfileOnlineDS {
 
 print(response.data);
      if(serverResponse.statusCode >=200 && serverResponse.statusCode <300){
+       sharedPrefsUtils.saveUser(response);
+       print("token is : ${response.message}");
+       sharedPrefsUtils.saveToken(response.token!);
        return right(response);
      }else{
        return left(Failuer(response.message??Constants.defaultErrorMessage));
@@ -57,12 +63,53 @@ print(response.data);
       AllUsersResponse response = AllUsersResponse.fromJson(jsonDecode(serverResponse.body));
 
       if(serverResponse.statusCode >= 200 && serverResponse.statusCode < 300){
+
         return right(response);
       }else{
         return left(Failuer(response.message?? Constants.defaultErrorMessage));
       }
     }catch(e,ee){
       return left(Failuer(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failuer,bool>> updatePhoto( File image) async{
+
+    String token = await SharedPrefsUtils().getToken()??"";
+    try {
+      var formData = MultipartRequest('POST', Uri.parse("https://${EndPoints.baseUrl}${EndPoints.updatePhoto}"));
+
+
+      formData.headers.addAll(
+        {
+          'authorization': 'Bearer $token',
+          'Content-Type': 'multipart/form-data',
+        }
+      );
+
+
+      formData.files.add( MultipartFile(
+        'profileImage',
+        image.readAsBytes().asStream(),
+        image.lengthSync(),
+        filename: image.path.split("/").last,
+        contentType: MediaType('image', 'png'),
+      ));
+
+
+      Response serverResponse = await Response.fromStream(await formData.send());
+
+      print(" body of update profile is ::: ${serverResponse.body}");
+      if (serverResponse.statusCode >= 200 &&
+          serverResponse.statusCode < 300) {
+        return const Right(true);
+      } else {
+        return left(Failuer( Constants.defaultErrorMessage));
+      }
+    }catch(e,ee){
+      print("$e,$ee");
+      return left(Failuer(Constants.defaultErrorMessage));
     }
   }
 
