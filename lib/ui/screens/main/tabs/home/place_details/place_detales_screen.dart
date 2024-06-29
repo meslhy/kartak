@@ -9,8 +9,10 @@ import 'package:graduation_project/ui/screens/main/tabs/home/place_details/place
 import 'package:graduation_project/ui/screens/main/tabs/home/place_details/widgets/head_line_text_widget.dart';
 import 'package:graduation_project/ui/screens/payment/cash_payment/cash_payment_screen.dart';
 import 'package:graduation_project/ui/screens/payment/payment_details/payment_details_screen.dart';
+import 'package:graduation_project/ui/utils/app_colors.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:graduation_project/ui/utils/constants.dart';
+import 'package:graduation_project/ui/utils/dialog_utils.dart';
 import 'package:graduation_project/ui/widgets/error_view.dart';
 import 'package:graduation_project/ui/widgets/loading_widget.dart';
 
@@ -59,7 +61,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
         ),
       ),
       body: BlocBuilder(
-        bloc: viewModel.useCase,
+        bloc: viewModel.getSpecificPlacesUseCase,
         builder: (context, state) {
           print(state);
           if(state is BaseRequestSuccessState){
@@ -93,7 +95,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                     describtion(fixedColor , place.description ??""),
                     reviewsSection(fixedColor),
                     ratingSection(fixedColor,place.ratingQuantity??0),
-                    reviewsCommentList(fixedColor),
+                    reviewsCommentList(fixedColor,context),
                     locationSection(fixedColor),
                     ownerSection(fixedColor,place.owner??""),
                     applyDiscountButton(place.owner??""),
@@ -228,7 +230,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
     );
   }
 
-  Widget reviewsCommentList(Color fixedColor) {
+  Widget reviewsCommentList(Color fixedColor , BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: fixedColor.withOpacity(0.03),
@@ -240,14 +242,106 @@ class _PlaceDetailsState extends State<PlaceDetails> {
         children: [
           _buildReviewItem(),
           _buildReviewItem(),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {},
-              child: Text(
-                'Read More →',
-                style: TextStyle(color: fixedColor),
+          InkWell(
+            onTap: (){
+             showModalBottomSheet(
+                 context: context,
+                 isScrollControlled: true,
+                 builder:(context) {
+                  return SizedBox(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: Padding(
+                      padding:  EdgeInsets.only(top: 10.0 , bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                                itemBuilder:(context, index) => _buildReviewItem(),
+                              itemCount: 5,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left:  14.0,right: 14,bottom: 20,top: 10),
+                            child: BlocConsumer(
+                              bloc: viewModel.createCommentAndRateUseCase,
+                              listener: (context, state) {
+                                if(state is BaseRequestLoadingState)
+                                {
+                                  showLoading(context);
+                                }else if (state is BaseRequestSuccessState){
+                                  print("donnnnnnnne");
+                                }else if (state is BaseRequestErrorState){
+                                  Navigator.pop(context);
+                                  showErrorDialog(context, state.message);
+                                }
+                              },
+                              builder: (context, state){
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: 50,
+                                        child: TextFormField(
+                                          scrollPadding: const EdgeInsets.only(bottom: 50),
+                                          controller: viewModel.commentController,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(14)
+                                            ),
+                                            hintText: "Comment"
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width:50,
+                                      height: 50,
+                                      child: TextFormField(
+                                        scrollPadding: const EdgeInsets.only(bottom: 50),
+                                        controller: viewModel.rateController,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(14)
+                                          ),
+                                          hintText: "1:5"
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                        onPressed: (){
+                                          viewModel.createCommentAndRate(widget.idOfPlace);
+                                          viewModel.commentController.clear();
+                                          viewModel.rateController.clear();
+                                          Navigator.pop(context);
+                                          setState(() {});
+                                        },
+                                        icon: const Icon(Icons.add),
+                                    ),
+                                  ],
+                                );
+                              }
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                 },
+               backgroundColor: AppColors.white
+             );
+            },
+            child: Container(
+              width: 150,
+              height: 45,
+              alignment: AlignmentDirectional.center,
+              decoration: BoxDecoration(
+                color: AppColors.black,
+                borderRadius:  BorderRadius.circular(14),
               ),
+              child: const Text("Comment",style: TextStyle(color: AppColors.white,fontWeight: FontWeight.bold,fontSize: 22),),
             ),
           ),
         ],
@@ -256,37 +350,45 @@ class _PlaceDetailsState extends State<PlaceDetails> {
   }
 
   Widget _buildReviewItem() {
-    return const Align(
+    return  Align(
       alignment: Alignment.centerLeft,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(
-                  'https://qph.cf2.quoracdn.net/main-qimg-31cce1e286ed4fbbf03e40b8993f294a-lq'), // Replace with actual user image
-              radius: 25,
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Yasin Badr',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    'Wonderful place, I had a great time there',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ],
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 14),
+         padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(14)
+          ),
+          child: const Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(
+                    'https://qph.cf2.quoracdn.net/main-qimg-31cce1e286ed4fbbf03e40b8993f294a-lq'), // Rep// lace with actual user image
+                radius: 22,
               ),
-            ),
-          ],
+              SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Yasin Badr',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      'Wonderful place, I had a great time there',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -295,10 +397,10 @@ class _PlaceDetailsState extends State<PlaceDetails> {
   Widget locationSection(Color fixedColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child:    Column(
+      child:    const Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const HeadlineTextWidget(
+          HeadlineTextWidget(
             text: 'Location',
           ),
 
@@ -333,8 +435,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
   Widget applyDiscountButton(String owner) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-      child: ElevatedButton(
-        onPressed: () {
+      child: InkWell(
+        onTap: () {
           // Show payment method selection dialog
           showDialog(
             context: context,
@@ -403,12 +505,18 @@ class _PlaceDetailsState extends State<PlaceDetails> {
             },
           );
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
-        ),
-        child: const Text(
-          'Apply Discount',
-          style: TextStyle(color: Colors.white),
+        child: Container(
+          width: 200,
+          height: 45,
+          alignment: AlignmentDirectional.center,
+          decoration: BoxDecoration(
+            color: AppColors.black,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: const Text(
+            'Apply Discount',
+            style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );

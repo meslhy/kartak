@@ -36,5 +36,14 @@ class HomeRepoImpl extends HomeRepo{
     }
   }
 
+  @override
+  Future<Either<Failuer, bool>> createCommentAndRate(String userID, String placeID, String comment, String rate) async{
+   if(await connectivity.isInternetConnective){
+     return homeOnlineDS.createCommentAndRate(userID, placeID, comment, rate);
+   }else{
+     return left(Failuer(Constants.internetErrorMessage));
+   }
+  }
+
 
 }

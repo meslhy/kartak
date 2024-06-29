@@ -54,5 +54,38 @@ class HomeOnlineDSImpl extends HomeOnlineDS{
      return left(Failuer(e.toString()));
    }
   }
+
+  @override
+  Future<Either<Failuer, bool>> createCommentAndRate(String userID, String placeID, String comment, String rate) async{
+  String token =await SharedPrefsUtils().getToken()??"";
+  try{
+    Uri url = Uri.https(EndPoints.baseUrl , EndPoints.review);
+    Response serverResponse = await post(
+        url,
+      headers: {
+          "authorization" : "Bearer $token",
+        'Content-Type': 'application/json',
+      },
+      body:json.encode({
+        "title":comment,
+        "rate":rate,
+        "user":userID,
+        "place":placeID
+      })
+    );
+
+
+    print("body of comment and rate is :${serverResponse.body}");
+    if(serverResponse.statusCode >=200 && serverResponse.statusCode < 300){
+      return right(true);
+    }else{
+      return left(Failuer(Constants.defaultErrorMessage));
+    }
+  }catch(e,ee){
+    return left(Failuer(Constants.defaultErrorMessage));
+  }
+  }
+
+
   
 }
