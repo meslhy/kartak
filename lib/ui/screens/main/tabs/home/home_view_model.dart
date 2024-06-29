@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/data/model/responses/auth_response/AuthResponse.dart';
+import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/domain/use_cases/get_places_use_case.dart';
+import 'package:graduation_project/shared_locale/helper.dart';
 import 'package:graduation_project/ui/screens/auth/login/login_screen.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:injectable/injectable.dart';
@@ -11,6 +15,8 @@ import '../../../../utils/app_colors.dart';
 @injectable
 class HomeViewModel extends Cubit{
   AuthResponse? currentUser;
+
+  PlaceResponse allPlacesCached = PlaceResponse.fromJson(jsonDecode(SharedPreferenceGlobal.getDataString(key: "allPlaces")??""));
   GetPlacesUseCase getPlacesUseCase;
   HomeViewModel(this.getPlacesUseCase) : super(BaseRequestInitialState());
 

@@ -20,12 +20,20 @@ class SharedPreferenceGlobal
     return await sharedPreferences.setBool(key, value);
   }
 
+  static Future<bool> putDataString({required String key, required String value}) async{
+    return await sharedPreferences.setString(key, value);
+  }
+
    static int? getData({required String key}) {
     return  sharedPreferences.getInt(key);
   }
 
   static bool getDataBool({required String key}) {
     return  sharedPreferences.getBool(key) ?? false;
+  }
+
+  static String getDataString({required String key}) {
+    return  sharedPreferences.getString(key) ?? "";
   }
 
 

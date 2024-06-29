@@ -173,9 +173,12 @@ class AuthRepoImpl extends AuthRepo {
 
 
   @override
-  Future<Either<Failuer, bool>> verificationOTP(String otp) async{
+  Future<Either<Failuer, bool>> verificationOTP(String otp , String pass , String confirmPass) async{
     final body = jsonEncode({
-      "resetCode": otp,});
+      "resetCode": otp,
+      "password":pass,
+      "confirmPassword":confirmPass
+    });
 
     if(await connectivity.isInternetConnective) {
       try{

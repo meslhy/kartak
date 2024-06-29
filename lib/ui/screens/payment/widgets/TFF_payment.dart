@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 Widget buildTextField({
   required String labelText,
-  required TextEditingController controller
+  required TextEditingController controller,
+  String? Function(String?)? fun,
 }) {
   return TextFormField(
     controller: controller,
+    validator: fun,
     undoController:UndoHistoryController(value:UndoHistoryValue.empty ) ,
     cursorColor: const Color.fromRGBO(227, 163, 22, 1), // Set the cursor color
     decoration: InputDecoration(

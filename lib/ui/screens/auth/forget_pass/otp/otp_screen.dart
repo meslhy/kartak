@@ -7,13 +7,14 @@ import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:graduation_project/ui/screens/auth/forget_pass/otp/otp_view_model.dart';
 import 'package:graduation_project/ui/screens/auth/forget_pass/send_otp/send_otp_screen.dart';
 import 'package:graduation_project/ui/screens/auth/login/login_screen.dart';
+import 'package:graduation_project/ui/screens/payment/widgets/TFF_payment.dart';
+import 'package:graduation_project/ui/utils/app_assets.dart';
 import 'package:graduation_project/ui/widgets/title_text.dart';
 
 import '../../../../../domain/di/di.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/base_request_states.dart';
 import '../../../../utils/dialog_utils.dart';
-import '../../../../widgets/button.dart';
 
 class VerificationOTPScreen extends StatefulWidget {
   static const String routeName = "OtpScreen";
@@ -29,78 +30,81 @@ class _VerificationOTPScreenState extends State<VerificationOTPScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: BlocListener(
-        bloc: viewModel,
-        listener: (context, state) {
-          if(state is BaseRequestLoadingState)
-          {
-            showLoading(context);
-          }else if (state is BaseRequestSuccessState){
-            Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-          }else if (state is BaseRequestErrorState){
-            Navigator.pop(context);
-            showErrorDialog(context, state.message);
-          }
-        },
-        child: Scaffold(
-          backgroundColor: const Color(0xffF5F0F0),
-          body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    TextButton(
-                        onPressed: (){
-                          Navigator.pushReplacementNamed(context, SendOtpScreen.routeName);
-                        },
-                        child: CustomText(
-                          text: "الغاء",
-                          color: AppColors.accent,
+      child: Scaffold(
+        body: BlocListener(
+          bloc: viewModel,
+          listener: (context, state) {
+            if(state is BaseRequestLoadingState)
+            {
+              showLoading(context);
+            }else if (state is BaseRequestSuccessState){
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+            }else if (state is BaseRequestErrorState){
+              Navigator.pop(context);
+              showErrorDialog(context, state.message);
+            }
+          },
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        size: 30,
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                  const CircleAvatar(
+                    radius: 140,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: AssetImage(AppAssets.kartakLogo),
+                  ),
+                  buildTextField(
+                    labelText: 'Reset code',
+                    controller: viewModel.otpController,
+                    fun: (text){}
+                  ),
+                  buildTextField(
+                    labelText: 'Password',
+                    controller: viewModel.passController,
+                      fun: (text){}
+                  ),
+                  buildTextField(
+                    labelText: 'Confirm Password',
+                    controller: viewModel.confirmPassController,
+                      fun: (text){}
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(40),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        viewModel.verificationOTP();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                    ),
-                    const SizedBox(width: 30,),
-                    CustomText(
-                      text: "تعيين رمز الدخول",
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 100,),
-                TimerCountdown(
-                  format: CountDownTimerFormat.minutesSeconds,
-                    endTime: DateTime.now().add(
-                      const Duration(
-                        minutes: 10
+                      ),
+                      child: const Text(
+                        'Reset Password',
+                        style: TextStyle(
+                          color: Color.fromRGBO(227, 163, 22, 1),
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                  onEnd: (){
-                    Navigator.pushReplacementNamed(context, SendOtpScreen.routeName);
-                  },
-                ),
-                const SizedBox(height: 50,),
-                OtpTextField(
-                  numberOfFields: 6,
-                  enabledBorderColor: AppColors.black,
-                  focusedBorderColor: AppColors.grey,
-                  borderRadius: BorderRadius.circular(16),
-                  showCursor: false,
-                  showFieldAsBox: true,
-                  fillColor: AppColors.primary,
-                  filled: true,
-                  onSubmit: (String verificationCode){
-                    viewModel.otpText = verificationCode ;
-                  },
-                ),
-                const SizedBox(height: 50,),
-                CustomButton(
-                  text: "تم",
-                  onPressed: (){
-                   viewModel.verificationOTP();
-                  },
-                ),
-
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

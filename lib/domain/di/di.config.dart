@@ -57,9 +57,9 @@ import '../repos/transactions/transactions_repo.dart' as _i16;
 import '../use_cases/get_places_use_case.dart' as _i40;
 import '../use_cases/get_profile_use_case.dart' as _i41;
 import '../use_cases/get_specific_place_use_case.dart' as _i42;
+import '../use_cases/get_specific_user_use_case.dart' as _i43;
 import '../use_cases/get_transactions_use_case.dart' as _i20;
 import '../use_cases/get_users_use_case.dart' as _i44;
-import '../use_cases/get_specific_user_use_case.dart' as _i43;
 import '../use_cases/login_use_case.dart' as _i25;
 import '../use_cases/payment_cash_use_case.dart' as _i27;
 import '../use_cases/payment_use_case.dart' as _i9;
@@ -108,8 +108,10 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.factory<_i20.GetTransactionsUseCase>(
         () => _i20.GetTransactionsUseCase(gh<_i16.TransactionsRepo>()));
-    gh.factory<_i21.HomeOnlineDS>(
-        () => _i22.HomeOnlineDSImpl(gh<_i12.SharedPrefsUtils>()));
+    gh.factory<_i21.HomeOnlineDS>(() => _i22.HomeOnlineDSImpl(
+          gh<_i12.SharedPrefsUtils>(),
+          gh<_i11.SharedPreferenceGlobal>(),
+        ));
     gh.factory<_i23.HomeRepo>(() => _i24.HomeRepoImpl(
           gh<_i21.HomeOnlineDS>(),
           gh<_i3.Connectivity>(),

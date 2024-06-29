@@ -48,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     viewModel.getAllPlaces();
     viewModel.getAllUsers();
     viewModel.getProfileInf();
+    viewModel.getUser();
     super.initState();
   }
   @override
@@ -160,7 +161,109 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
             return Center(child: Text(state.message),);
           }else{
-            return Center(child: LoadingWidget(),);
+            return BlocBuilder(
+                bloc: viewModel,
+                builder: (context, state){
+                  if(state is BaseRequestSuccessState){
+                    data = state.data.data;
+                    role = data.role??"user";
+                    return SingleChildScrollView(
+                      child: Container(
+                        color: Colors.white,
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.popAndPushNamed(context, UpdatePictureScreen.routeName);
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 80, bottom: 15),
+                                child: CircleAvatar(
+                                  radius: 70,
+                                  backgroundImage: NetworkImage(data.cloudImage!.url!),
+                                ),
+
+                              ),
+                            ),
+                            _buildProfileInfo(),
+                            if(role != "user")  SizedBox(height: 5,),
+                            if(role != "user") InkWell(
+                              onTap: (){
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Container(
+                                        color: AppColors.white,
+                                        child: BarcodeWidget(
+                                          barcode: Barcode.qrCode(),
+                                          data: data.id??"",
+                                          height: MediaQuery.of(context).size.width *0.4,
+                                          width: MediaQuery.of(context).size.width *0.4,
+                                        ),
+                                      ),
+
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                color: const Color.fromRGBO(243, 230, 209, 0.7),
+                                padding: const EdgeInsets.only(bottom: 10),
+
+                                child: Icon(
+                                    Icons.qr_code
+                                ),
+                              ),
+                            ),
+                            if (role == "admin") _buildAdminArea(data),
+                            if (role == "owner") _buildOwnerArea(data),
+                            if (role == "user") _buildUserArea(data),
+                            Container(
+                              margin: const EdgeInsets.only(top: 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      FontAwesomeIcons.facebook,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      FontAwesomeIcons.twitter,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      FontAwesomeIcons.linkedin,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      FontAwesomeIcons.instagram,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }else{
+                    return LoadingWidget();
+                  }
+
+                }
+            );
           }
         },
       ),

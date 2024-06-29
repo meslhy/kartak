@@ -6,6 +6,7 @@ import 'package:graduation_project/data/model/responses/places_response/placeDet
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/domain/repos/home_repo/ds/home_online_ds.dart';
+import 'package:graduation_project/shared_locale/helper.dart';
 import 'package:graduation_project/ui/utils/constants.dart';
 import 'package:graduation_project/ui/utils/end_points.dart';
 import 'package:http/http.dart';
@@ -15,8 +16,9 @@ import 'package:injectable/injectable.dart';
 class HomeOnlineDSImpl extends HomeOnlineDS{
   
   SharedPrefsUtils sharedPrefsUtils;
+  SharedPreferenceGlobal sharedPreferenceGlobal;
   
-  HomeOnlineDSImpl(this.sharedPrefsUtils);
+  HomeOnlineDSImpl(this.sharedPrefsUtils,this.sharedPreferenceGlobal);
   
   @override
   Future<Either<Failuer, List<PlacesDM>>> getPlaces() async{
@@ -26,6 +28,7 @@ class HomeOnlineDSImpl extends HomeOnlineDS{
      PlaceResponse response = PlaceResponse.fromJson(jsonDecode(serverResponse.body));
 
      if(serverResponse.statusCode >= 200 && serverResponse.statusCode < 300){
+       SharedPreferenceGlobal.putDataString(key: "allPlaces",value:serverResponse.body );
        return right(response.data!);
      }else{
        return left(Failuer(response.message?? Constants.defaultErrorMessage));

@@ -11,7 +11,7 @@ class VerificationOTPUseCase{
   AuthRepo repo;
   VerificationOTPUseCase(this.repo);
 
-  Future<Either<Failuer , bool>> execute(String otp){
-    return repo.verificationOTP(otp);
+  Future<Either<Failuer , bool>> execute(String otp, String pass , String confirmPass){
+    return repo.verificationOTP(otp, pass , confirmPass);
   }
 }

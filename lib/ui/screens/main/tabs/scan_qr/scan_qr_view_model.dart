@@ -15,11 +15,12 @@ class ScanQRViewModel extends Cubit{
 
   Future<void> scanQR(BuildContext context) async {
     try {
-     dynamic qr = await FlutterBarcodeScanner.scanBarcode('#F09F22', 'Cancel', false, ScanMode.QR);
-     if(qr == -1) return;
-     navigateTo(context, ProfileFromQRScreen(id: qr));
-
-      print("qr is : $qr");
+     dynamic qr = await FlutterBarcodeScanner.scanBarcode('#F09F22', 'Cancel', true, ScanMode.QR).then(
+             (qr) {
+             if(qr == "-1")return;
+             navigateTo(context, ProfileFromQRScreen(id: qr));
+             }
+     );
     } on PlatformException {
       emit(BaseRequestErrorState("Failed to get platform version."));
     }

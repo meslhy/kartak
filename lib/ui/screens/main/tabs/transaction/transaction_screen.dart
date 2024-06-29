@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/data/model/responses/auth_response/AuthResponse.dart';
 import 'package:graduation_project/data/model/responses/transactions/TransactionsResponse.dart';
 import 'package:graduation_project/domain/di/di.dart';
+import 'package:graduation_project/ui/screens/main/tabs/home/home_view_model.dart';
 import 'package:graduation_project/ui/screens/main/tabs/transaction/transactions_view_model.dart';
 import 'package:graduation_project/ui/screens/main/tabs/transaction/widgets/all.dart';
 import 'package:graduation_project/ui/utils/app_assets.dart';
@@ -35,6 +36,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   void initState() {
    viewModel.getTransactions();
    viewModel.getProfile();
+   viewModel.getUser();
     super.initState();
   }
 
@@ -110,7 +112,75 @@ class _TransactionScreenState extends State<TransactionScreen> {
               }else if(state is BaseRequestErrorState){
                 return Text(state.message);
               }else {
-                return Center(child: LoadingWidget(),);
+                  return BlocBuilder(
+                    bloc: viewModel,
+                    builder: (context, state){
+                      if(state is BaseRequestUserState){
+                        AuthData user = state.data.data;
+                        return Container(
+                          height: 160,
+                          padding: const EdgeInsets.all(15),
+                          margin:
+                          const EdgeInsets.only(top: 20, left: 30, right: 30, bottom: 40),
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(250, 250, 250, .5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.only(top: 10, left: 10),
+                            alignment: Alignment.topLeft,
+                            child:  Row(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      user.name??"",
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.amber,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.none,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "EGP ${user.cashBack??0}",
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.amber,
+                                            fontWeight: FontWeight.bold,
+                                            decoration: TextDecoration.none,
+                                          ),
+                                        ),
+                                        const Text("Current CashBack",style: TextStyle(fontSize: 14,color: Colors.amber),),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: NetworkImage(user.cloudImage!.url??""),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }else{
+                        return LoadingWidget();
+                      }
+
+                    }
+                  );
+
+
               }
             }
           ),

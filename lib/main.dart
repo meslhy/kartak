@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         TransactionScreen.routeName :(context) =>  TransactionScreen(),
         ScanQRScreen.routeName :(context) =>  ScanQRScreen(),
       },
-      initialRoute:SplashScreen.routeName,
+      initialRoute:LoginScreen.routeName,
     );
   }
 }
