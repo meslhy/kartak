@@ -210,6 +210,41 @@ class AuthRepoImpl extends AuthRepo {
     }
   }
 
+  @override
+  Future<Either<Failuer, bool>> changePassword(String oldPass, String newPass, String confirmNewPass) async{
+   if(await connectivity.isInternetConnective){
+     String token = await SharedPrefsUtils().getToken()??"";
+     try{
+       Uri url = Uri.https(EndPoints.baseUrl,EndPoints.changePass);
+
+       Response serverResponse = await patch(
+           url,
+         headers: {
+             "authorization":"Bearer $token",
+           "Content-Type":"application/json"
+         },
+         body: jsonEncode({
+           "currentPassword":oldPass,
+           "newPassword":newPass,
+           "confirmPassword":confirmNewPass
+         }),
+       );
+
+
+       print(serverResponse.body);
+       if(serverResponse.statusCode >=200 && serverResponse.statusCode <300 ){
+         return right(true);
+       }else{
+         return left(Failuer(Constants.defaultErrorMessage));
+       }
+     }catch(e,ee){
+       return left(Failuer(e.toString()));
+     }
+   }else{
+     return left(Failuer(Constants.internetErrorMessage));
+   }
+  }
+
 
 
 

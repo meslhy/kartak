@@ -8,6 +8,7 @@ abstract class EndPoints {
   static String cashPayment = "/api/order";
   static String sendOTP = "/api/auth/forgetPassword";
   static String verificationOTP = "/api/auth/verifyResetCode";
+  static String changePass = "/api/auth/updatePassword";
   static String userTransactions = "/api/order/loggedUser";
   static String profile = "/api/auth/currentUser";
   static String review = "/api/review";

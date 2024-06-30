@@ -16,6 +16,7 @@ import 'package:graduation_project/ui/screens/splash/splash_screen.dart';
 import 'package:graduation_project/ui/utils/app_theme.dart';
 
 import 'domain/di/di.dart';
+import 'ui/screens/main/tabs/profile/change_password/change_pass_screen.dart';
 
 
 void main() async{
@@ -38,11 +39,12 @@ class MyApp extends StatelessWidget {
         SplashScreen.routeName :(context) => const SplashScreen(),
         LoginScreen.routeName :(context) => const LoginScreen(),
         RegisterScreen.routeName: (context) => const RegisterScreen(),
-        ProfileScreen.routeName:(context) => ProfileScreen(),
-        UpdatePictureScreen.routeName:(context) => UpdatePictureScreen(),
+        ProfileScreen.routeName:(context) => const ProfileScreen(),
+        UpdatePictureScreen.routeName:(context) => const UpdatePictureScreen(),
         MainScreen.routeName :(context) => const MainScreen(),
         HomeScreen.routeName :(context) => const HomeScreen(),
         VerificationOTPScreen.routeName :(context) => const VerificationOTPScreen(),
+        ChangePassScreen.routeName :(context) => const ChangePassScreen(),
         SendOtpScreen.routeName :(context) => const SendOtpScreen(),
         TransactionScreen.routeName :(context) =>  TransactionScreen(),
         ScanQRScreen.routeName :(context) =>  ScanQRScreen(),

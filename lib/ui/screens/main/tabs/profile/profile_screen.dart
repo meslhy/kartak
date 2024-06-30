@@ -15,6 +15,8 @@ import 'package:graduation_project/ui/utils/app_colors.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:graduation_project/ui/widgets/loading_widget.dart';
 
+import 'change_password/change_pass_screen.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   static const routeName = "ProfileScreen";
@@ -53,8 +55,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       body: BlocBuilder(
        bloc:viewModel.getProfileUseCase ,
@@ -83,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       _buildProfileInfo(),
-                      if(role != "user")  SizedBox(height: 5,),
+                      if(role != "user")  const SizedBox(height: 5,),
                       if(role != "user") InkWell(
                         onTap: (){
                           showDialog(
@@ -110,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: const Color.fromRGBO(243, 230, 209, 0.7),
                           padding: const EdgeInsets.only(bottom: 10),
 
-                          child: Icon(
+                          child: const Icon(
                               Icons.qr_code
                           ),
                         ),
@@ -187,7 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                             _buildProfileInfo(),
-                            if(role != "user")  SizedBox(height: 5,),
+                            if(role != "user")  const SizedBox(height: 5,),
                             if(role != "user") InkWell(
                               onTap: (){
                                 showDialog(
@@ -214,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: const Color.fromRGBO(243, 230, 209, 0.7),
                                 padding: const EdgeInsets.only(bottom: 10),
 
-                                child: Icon(
+                                child: const Icon(
                                     Icons.qr_code
                                 ),
                               ),
@@ -305,7 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
              Text(
               data.name??"",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 decoration: TextDecoration.none,
                 color: Colors.black,
@@ -316,7 +316,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
               icon: const Icon(
                 Icons.settings,
               ),
-              onPressed: () {},
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder:(context) {
+                      return SizedBox(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        child: Padding(
+                          padding:  EdgeInsets.only(top: 10.0 , bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 50,
+                                margin: const EdgeInsets.symmetric(horizontal: 24),
+                                decoration: BoxDecoration(
+                                  color: AppColors.black,
+                                  borderRadius: BorderRadius.circular(10)
+                                ),
+                                child: InkWell(
+                                  onTap: (){
+                                    Navigator.pushNamed(context, ChangePassScreen.routeName);
+                                  },
+                                  child: const Row(
+                                    children: [
+                                      SizedBox(width: 10,),
+                                      Icon(Icons.password,color: AppColors.white),
+                                      SizedBox(width: 10,),
+                                      Text(
+                                        "Change Password",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: AppColors.white
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    backgroundColor: AppColors.white
+                );
+              },
             ),
           ],
         ),
@@ -328,13 +379,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.black)),
          Text(
              data.phone??"",
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 12,
                 decoration: TextDecoration.none,
                 color: Colors.black)),
       ],
     );
   }
+
+
 
 
   Widget _buildAdminArea(AuthData user) {

@@ -19,5 +19,6 @@ abstract class AuthRepo{
 
   Future<Either<Failuer , bool>> sendOTP (String email);
   Future<Either<Failuer , bool>> verificationOTP (String otp, String pass , String confirmPass);
+  Future<Either<Failuer , bool>> changePassword (String oldPass ,String newPass , String confirmNewPass);
 
 }
