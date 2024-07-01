@@ -16,6 +16,7 @@ import 'package:graduation_project/ui/screens/splash/splash_screen.dart';
 import 'package:graduation_project/ui/utils/app_theme.dart';
 
 import 'domain/di/di.dart';
+import 'ui/screens/main/tabs/profile/add_place/add_place_screen.dart';
 import 'ui/screens/main/tabs/profile/change_password/change_pass_screen.dart';
 
 
@@ -48,8 +49,9 @@ class MyApp extends StatelessWidget {
         SendOtpScreen.routeName :(context) => const SendOtpScreen(),
         TransactionScreen.routeName :(context) =>  TransactionScreen(),
         ScanQRScreen.routeName :(context) =>  ScanQRScreen(),
+        AddPlaceScreen.routeName :(context) =>  AddPlaceScreen(),
       },
-      initialRoute:SplashScreen.routeName,
+      initialRoute:MainScreen.routeName,
     );
   }
 }

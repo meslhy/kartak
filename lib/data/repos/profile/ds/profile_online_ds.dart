@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
 import 'package:graduation_project/data/model/responses/auth_response/AuthResponse.dart';
+import 'package:graduation_project/data/model/responses/profile/add_place/AddPlaceResponse.dart';
 import 'package:graduation_project/data/model/responses/users/AllUsersResponse.dart';
 import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/domain/repos/profile/ds/profile_online_ds.dart';
@@ -130,6 +131,44 @@ print(response.data);
       print("$e,$ee");
       return left(Failuer(Constants.defaultErrorMessage));
     }
+  }
+
+  @override
+  Future<Either<Failuer, bool>> addPlace(String name, String description, String discount, File imageCover, String category,String owner,String code) async{
+   try{
+     var formData = MultipartRequest('POST', Uri.parse("https://${EndPoints.baseUrl}${EndPoints.places}}"));
+     formData.fields.addAll({
+       'name': name,
+       'description': description,
+       'discount': discount,
+       // 'imageCover': imageCover,
+       'category': category,
+       'owner': owner,
+       'code': code,
+     });
+
+     formData.files.add( MultipartFile(
+       'imageCover',
+       imageCover.readAsBytes().asStream(),
+       imageCover.lengthSync(),
+       filename: imageCover.path.split("/").last,
+       contentType: MediaType('image', 'png'),
+     ));
+
+     print(" file is ::: ${formData.fields}");
+
+     Response serverResponse = await Response.fromStream(await formData.send());
+
+     AddPlaceResponse response = AddPlaceResponse.fromJson(jsonDecode(serverResponse.body));
+
+     if(serverResponse.statusCode >=200 && serverResponse.statusCode < 300 ){
+       return right(true);
+     }else{
+       return left(Failuer(response.message??Constants.defaultErrorMessage));
+     }
+   }catch(e,ee){
+     return left(Failuer(e.toString()));
+   }
   }
 
 

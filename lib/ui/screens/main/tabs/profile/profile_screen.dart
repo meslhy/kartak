@@ -7,6 +7,7 @@ import 'package:graduation_project/data/model/responses/places_response/places_r
 import 'package:graduation_project/data/model/responses/users/AllUsersResponse.dart';
 import 'package:graduation_project/domain/di/di.dart';
 import 'package:graduation_project/ui/screens/auth/login/login_screen.dart';
+import 'package:graduation_project/ui/screens/main/tabs/profile/add_place/add_place_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/profile_view_model.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/update_picture/update_picture_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/profile/widgets/placecard.dart';
@@ -62,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
          print(state );
           if(state is BaseRequestSuccessState){
              data = state.data;
-             role = data.role??"user";
+             role ="admin";
             return SingleChildScrollView(
                 child: Container(
                   color: Colors.white,
@@ -408,7 +409,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: Color.fromRGBO(227, 163, 22, 0.7),
               size: 30,
             ),
-            onPressed: () {},
+            onPressed: () {
+              showPlaces ? Navigator.pushNamed(context, AddPlaceScreen.routeName) :null;
+            },
           ),
           showPlaces ? _buildPlacesListView() : _buildUsersListView(),
         ],

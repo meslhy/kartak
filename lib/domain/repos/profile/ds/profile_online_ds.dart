@@ -11,4 +11,5 @@ abstract class ProfileOnlineDS {
   Future<Either<Failuer,AllUsersResponse>>getAllUsers();
   Future<Either<Failuer, AuthResponse>> getSpecificUsers(String id);
   Future<Either<Failuer,bool>>updatePhoto( File image);
+  Future<Either<Failuer,bool>>addPlace( String name , String description, String discount,File imageCover , String category,String owner,String code);
 }

@@ -224,13 +224,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
                    itemBuilder: (context, index) {
                      return TransactionCard(
                        dataColor: dataColor,
-                       title: "",
+                       title: data[index].place!.name??"",
                        cashBack: "${data[index].cashBack!}",
                        date: data[index].createdAt!.substring(0,9),
                        payMethod: data[index].paymentTypeMethod!,
                        totalPrice: "${data[index].totalPrice}",
                        totalPriceAfterDiscount: "${data[index].totalPriceAfterDiscount!}",
-                       imagUrl: "https://res.cloudinary.com/dofdohxgb/image/upload/v1719448911/hhgk7xru0limwggjsxp4.jpg",
+                       imagUrl: data[index].place?.cloudImage?.url??"",
                      );
                    },
                  ),

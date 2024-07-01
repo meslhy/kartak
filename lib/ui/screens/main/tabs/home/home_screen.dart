@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/domain/di/di.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/place_details/place_detales_screen.dart';
+import 'package:graduation_project/ui/utils/app_colors.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:graduation_project/ui/utils/constants.dart';
 import 'package:graduation_project/ui/widgets/error_view.dart';
@@ -157,8 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                  place.slug??"",
-                 style:const TextStyle(
-                   color: Color.fromARGB(255, 0, 0, 0),
+                 style: TextStyle(
+                   color:AppColors.white,
                    fontWeight: FontWeight.bold,
                    fontSize: 18,
                  ),

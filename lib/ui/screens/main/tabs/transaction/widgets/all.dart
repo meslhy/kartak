@@ -31,7 +31,7 @@ class TransactionCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
              CircleAvatar(
               radius: 30,

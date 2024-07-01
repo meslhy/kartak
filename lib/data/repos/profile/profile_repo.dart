@@ -58,5 +58,14 @@ class ProfileRepoImpl extends ProfileRepo{
     }
   }
 
+  @override
+  Future<Either<Failuer, bool>> addPlace(String name, String description, String discount, File imageCover, String category, String owner, String code) async{
+    if(await connectivity.isInternetConnective){
+      return profileOnlineDS.addPlace(name, description, discount, imageCover, category, owner, code);
+    }else{
+      return left(Failuer(Constants.internetErrorMessage));
+    }
+  }
+
 
 }
