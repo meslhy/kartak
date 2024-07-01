@@ -13,5 +13,6 @@ abstract class EndPoints {
   static String profile = "/api/auth/currentUser";
   static String review = "/api/review";
   static String updatePhoto = "/api/user/profilePhotoChange";
+  static String placeComments = "/api/review/place";
 
 }

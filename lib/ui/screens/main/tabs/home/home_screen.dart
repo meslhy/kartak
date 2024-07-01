@@ -103,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }else if (state is BaseRequestErrorState){
                     return  Center(child: ErrorView(message:state.message ?? Constants.defaultErrorMessage));
                 }else{
+
                       if(viewModel.allPlacesCached.data == null){
                         return Center(child: LoadingWidget());
                       }else{

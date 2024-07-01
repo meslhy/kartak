@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
 import 'package:graduation_project/data/model/responses/payment/PaymentResponse.dart';
+import 'package:graduation_project/data/model/responses/payment/paymentOnlineResponse.dart';
 import 'package:graduation_project/domain/repos/payment/ds/payment_online_ds.dart';
 import 'package:graduation_project/domain/repos/payment/payment_repo.dart';
 import 'package:graduation_project/ui/utils/constants.dart';
@@ -19,9 +20,9 @@ class PaymentRepoImpl extends PaymentRepo{
   PaymentRepoImpl(this.paymentOnlineDS,this.connectivity);
 
   @override
-  Future<Either<Failuer, PaymentResponse>> paymentOnline(String token, String discountCode, String owner, String totalPrice) async{
+  Future<Either<Failuer, PaymentOnlineResponse>> paymentOnline(String discountCode, String owner, String totalPrice) async{
     if(await connectivity.isInternetConnective){
-      return paymentOnlineDS.paymentOnline(token, discountCode, owner, totalPrice);
+      return paymentOnlineDS.paymentOnline(discountCode, owner, totalPrice);
     }else{
       return left(Failuer(Constants.internetErrorMessage));
     }

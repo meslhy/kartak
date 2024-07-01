@@ -65,6 +65,7 @@ class PlaceDetailsData {
     imageCover = json['imageCover'];
     categore = json['categore'];
     ratingQuantity = json['ratingQuantity'];
+    rate = json['rate'];
     cloudImage = json['cloudImage'] != null ? CloudImage.fromJson(json['cloudImage']) : null;
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -76,16 +77,17 @@ class PlaceDetailsData {
   String? name;
   String? slug;
   String? description;
-  int? discount;
+  num? discount;
   String? imageCover;
   String? categore;
   int? ratingQuantity;
   CloudImage? cloudImage;
   String? createdAt;
   String? updatedAt;
-  int? v;
+  num? v;
   String? code;
   String? owner;
+  num? rate;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

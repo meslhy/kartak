@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:graduation_project/data/model/responses/comments/PlaceComentsResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/placeDetailsResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/domain/di/di.dart';
@@ -8,6 +9,7 @@ import 'package:graduation_project/ui/screens/auth/login/login_screen.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/place_details/place_details_view_model.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/place_details/widgets/head_line_text_widget.dart';
 import 'package:graduation_project/ui/screens/payment/cash_payment/cash_payment_screen.dart';
+import 'package:graduation_project/ui/screens/payment/online_payment/online_payment_screen.dart';
 import 'package:graduation_project/ui/screens/payment/payment_details/payment_details_screen.dart';
 import 'package:graduation_project/ui/utils/app_colors.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
@@ -41,8 +43,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
 
   @override
   void initState() {
-    print("PlaceeeeeeeeeeeeeeeeScreennnnnnnnnn");
     viewModel.getSpecificPlace(widget.idOfPlace);
+    viewModel.getPlaceComments(widget.idOfPlace);
     super.initState();
   }
 
@@ -76,7 +78,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                         Column(
                           children: [
                             header(fixedColor , place.name??""),
-                            discountBanner(fixedColor , place.owner??""),
+                            discountBanner(fixedColor , "${place.discount}"??""),
                           ],
                         ),
                         Positioned(
@@ -94,9 +96,9 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                     ),
                     describtion(fixedColor , place.description ??""),
                     reviewsSection(fixedColor),
-                    ratingSection(fixedColor,place.ratingQuantity??0),
+                    ratingSection(fixedColor,place.rate?.toDouble()??0,place.ratingQuantity??0),
                     reviewsCommentList(fixedColor,context),
-                    locationSection(fixedColor),
+                    //locationSection(fixedColor),
                     ownerSection(fixedColor,place.owner??""),
                     applyDiscountButton(place.owner??""),
                   ],
@@ -191,13 +193,15 @@ class _PlaceDetailsState extends State<PlaceDetails> {
     );
   }
 
-  Widget ratingSection(Color fixedColor , int rating) {
+  Widget ratingSection(Color fixedColor , double rating , totalRates) {
 
+    String formattedValue = rating.toStringAsFixed(1);
+    print(double.parse(formattedValue));
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
          Text(
-          "$rating"??"",
+          formattedValue??"",
           style: const TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
@@ -207,7 +211,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
         Column(
           children: [
             RatingBar.builder(
-              initialRating: rating.toDouble(),
+              initialRating:double.parse(formattedValue) ,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,
@@ -220,8 +224,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
               ),
               onRatingUpdate: (rating) {},
             ),
-            const Text(
-              'Total Rates: 34,931',
+             Text(
+              'Total Rates: $totalRates',
               style: TextStyle(fontSize: 10),
             ),
           ],
@@ -231,125 +235,145 @@ class _PlaceDetailsState extends State<PlaceDetails> {
   }
 
   Widget reviewsCommentList(Color fixedColor , BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: fixedColor.withOpacity(0.03),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      child: Column(
-        children: [
-          _buildReviewItem(),
-          _buildReviewItem(),
-          InkWell(
-            onTap: (){
-             showModalBottomSheet(
-                 context: context,
-                 isScrollControlled: true,
-                 builder:(context) {
-                  return SizedBox(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    child: Padding(
-                      padding:  EdgeInsets.only(top: 10.0 , bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                                itemBuilder:(context, index) => _buildReviewItem(),
-                              itemCount: 5,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left:  14.0,right: 14,bottom: 20,top: 10),
-                            child: BlocConsumer(
-                              bloc: viewModel.createCommentAndRateUseCase,
-                              listener: (context, state) {
-                                if(state is BaseRequestLoadingState)
-                                {
-                                  showLoading(context);
-                                }else if (state is BaseRequestSuccessState){
-                                  print("donnnnnnnne");
-                                }else if (state is BaseRequestErrorState){
-                                  Navigator.pop(context);
-                                  showErrorDialog(context, state.message);
-                                }
-                              },
-                              builder: (context, state){
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: SizedBox(
-                                        height: 50,
-                                        child: TextFormField(
-                                          scrollPadding: const EdgeInsets.only(bottom: 50),
-                                          controller: viewModel.commentController,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(14)
-                                            ),
-                                            hintText: "Comment"
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width:50,
-                                      height: 50,
-                                      child: TextFormField(
-                                        scrollPadding: const EdgeInsets.only(bottom: 50),
-                                        controller: viewModel.rateController,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(14)
-                                          ),
-                                          hintText: "1:5"
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                        onPressed: (){
-                                          viewModel.createCommentAndRate(widget.idOfPlace);
-                                          viewModel.commentController.clear();
-                                          viewModel.rateController.clear();
-                                          Navigator.pop(context);
-                                          setState(() {});
-                                        },
-                                        icon: const Icon(Icons.add),
-                                    ),
-                                  ],
-                                );
-                              }
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                 },
-               backgroundColor: AppColors.white
-             );
-            },
-            child: Container(
-              width: 150,
-              height: 45,
-              alignment: AlignmentDirectional.center,
-              decoration: BoxDecoration(
-                color: AppColors.black,
-                borderRadius:  BorderRadius.circular(14),
-              ),
-              child: const Text("Comment",style: TextStyle(color: AppColors.white,fontWeight: FontWeight.bold,fontSize: 22),),
+    return BlocBuilder(
+      bloc: viewModel.getPlaceCommentsUseCase,
+      builder: (context, state) {
+        if(state is BaseRequestSuccessState){
+          List<PlaceCommentData> comments = state.data.data;
+          return Container(
+            decoration: BoxDecoration(
+              color: fixedColor.withOpacity(0.03),
+              borderRadius: BorderRadius.circular(10),
             ),
-          ),
-        ],
-      ),
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            child: Column(
+              children: [
+
+                if (comments.isNotEmpty) _buildReviewItem(comments[0]) ,
+                if (comments.isNotEmpty) _buildReviewItem(comments[1]),
+                if (comments.isNotEmpty) Container(
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.all(20),
+        ),
+                  InkWell(
+                  onTap: (){
+                    showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder:(context) {
+                          return SizedBox(
+                            width: double.infinity,
+                            height: MediaQuery.of(context).size.height * 0.6,
+                            child: Padding(
+                              padding:  EdgeInsets.only(top: 10.0 , bottom: MediaQuery.of(context).viewInsets.bottom),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemBuilder:(context, index) => _buildReviewItem(comments[index]),
+                                      itemCount: comments.length??0,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left:  14.0,right: 14,bottom: 20,top: 10),
+                                    child: BlocConsumer(
+                                        bloc: viewModel.createCommentAndRateUseCase,
+                                        listener: (context, state) {
+                                          if(state is BaseRequestLoadingState)
+                                          {
+                                            showLoading(context);
+                                          }else if (state is BaseRequestSuccessState){
+                                            print("donnnnnnnne");
+                                          }else if (state is BaseRequestErrorState){
+                                            Navigator.pop(context);
+                                            showErrorDialog(context, state.message);
+                                          }
+                                        },
+                                        builder: (context, state){
+                                          return Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                child: SizedBox(
+                                                  height: 50,
+                                                  child: TextFormField(
+                                                    scrollPadding: const EdgeInsets.only(bottom: 50),
+                                                    controller: viewModel.commentController,
+                                                    decoration: InputDecoration(
+                                                        border: OutlineInputBorder(
+                                                            borderRadius: BorderRadius.circular(14)
+                                                        ),
+                                                        hintText: "Comment"
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width:50,
+                                                height: 50,
+                                                child: TextFormField(
+                                                  scrollPadding: const EdgeInsets.only(bottom: 50),
+                                                  controller: viewModel.rateController,
+                                                  decoration: InputDecoration(
+                                                      border: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(14)
+                                                      ),
+                                                      hintText: "1:5"
+                                                  ),
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: (){
+                                                  viewModel.createCommentAndRate(widget.idOfPlace);
+                                                  viewModel.getPlaceComments(widget.idOfPlace);
+                                                  Navigator.pop(context);
+
+                                                },
+                                                icon: const Icon(Icons.add),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        backgroundColor: AppColors.white
+                    );
+                  },
+                  child: Container(
+                    width: 150,
+                    height: 45,
+                    alignment: AlignmentDirectional.center,
+                    decoration: BoxDecoration(
+                      color: AppColors.black,
+                      borderRadius:  BorderRadius.circular(14),
+                    ),
+                    child: const Text("Comment",style: TextStyle(color: AppColors.white,fontWeight: FontWeight.bold,fontSize: 22),),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }else if(state is BaseRequestErrorState){
+          return ErrorView(message: state.message);
+        }else{
+          return Container(
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.all(20),
+          );
+        }
+
+      },
     );
   }
 
-  Widget _buildReviewItem() {
+  Widget _buildReviewItem(PlaceCommentData comment) {
     return  Align(
       alignment: Alignment.centerLeft,
       child: Padding(
@@ -361,19 +385,19 @@ class _PlaceDetailsState extends State<PlaceDetails> {
               color: Colors.grey[100],
             borderRadius: BorderRadius.circular(14)
           ),
-          child: const Row(
+          child:  Row(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundImage: NetworkImage(
                     'https://qph.cf2.quoracdn.net/main-qimg-31cce1e286ed4fbbf03e40b8993f294a-lq'), // Rep// lace with actual user image
                 radius: 22,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Yasin Badr',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -381,8 +405,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                       ),
                     ),
                     Text(
-                      'Wonderful place, I had a great time there',
-                      style: TextStyle(fontSize: 12),
+                     comment.title??"",
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
@@ -457,7 +481,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const PaymentDetails(),
+                              builder: (context) => OnlinePaymentPage(owner: owner),
                             ),
                           );
                         },

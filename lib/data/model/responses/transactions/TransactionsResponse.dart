@@ -79,10 +79,10 @@ class TransactionData {
   Place? place;
   String? paymentTypeMethod;
   String? paidAt;
-  int? totalPrice;
-  int? totalPriceAfterDiscount;
+  num? totalPrice;
+  num? totalPriceAfterDiscount;
   String? owner;
-  int? cashBack;
+  num? cashBack;
   String? createdAt;
   String? updatedAt;
   int? v;
@@ -163,17 +163,17 @@ class Place {
   String? name;
   String? slug;
   String? description;
-  int? discount;
+  num? discount;
   String? imageCover;
   String? categore;
-  int? ratingQuantity;
+  num? ratingQuantity;
   CloudImage? cloudImage;
   String? createdAt;
   String? updatedAt;
-  int? v;
+  num? v;
   String? code;
   String? owner;
-  int? rate;
+  num? rate;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/data/model/responses/auth_response/AuthResponse.dart';
 import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/domain/use_cases/create_comment_and_rate_use_case.dart';
+import 'package:graduation_project/domain/use_cases/get_place_comments_use_case.dart';
 import 'package:graduation_project/domain/use_cases/get_specific_place_use_case.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:injectable/injectable.dart';
@@ -15,8 +16,9 @@ class PlaceDetailsViewModel extends Cubit {
   TextEditingController rateController = TextEditingController();
   GetSpecificPlacesUseCase getSpecificPlacesUseCase ;
   CreateCommentAndRateUseCase createCommentAndRateUseCase;
+  GetPlaceCommentsUseCase getPlaceCommentsUseCase;
 
-  PlaceDetailsViewModel(this.getSpecificPlacesUseCase,this.createCommentAndRateUseCase):super(BaseRequestInitialState());
+  PlaceDetailsViewModel(this.getSpecificPlacesUseCase,this.createCommentAndRateUseCase,this.getPlaceCommentsUseCase):super(BaseRequestInitialState());
 
   getSpecificPlace(String id){
 
@@ -32,6 +34,9 @@ class PlaceDetailsViewModel extends Cubit {
     if(int.parse(rateController.text) > 5) rateController.text ="5";
     if(int.parse(rateController.text) < 0) rateController.text ="0";
     return createCommentAndRateUseCase.execute(userID, placeID, commentController.text, rateController.text);
+  }
+  getPlaceComments(String id){
+    return getPlaceCommentsUseCase.execute(id);
   }
 
 }

@@ -2,26 +2,27 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
 import 'package:graduation_project/data/model/responses/payment/PaymentResponse.dart';
+import 'package:graduation_project/data/model/responses/payment/paymentOnlineResponse.dart';
 import 'package:graduation_project/domain/repos/payment/payment_repo.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:injectable/injectable.dart';
 
 
 @injectable
-class PaymentUseCase extends Cubit {
+class PaymentOnlineUseCase extends Cubit {
 
   PaymentRepo repo;
 
-  PaymentUseCase(this.repo):super(BaseRequestInitialState());
+  PaymentOnlineUseCase(this.repo):super(BaseRequestInitialState());
 
 
-    void execute(String token,String discountCode, String owner,String totalPrice)async{
+    void execute(String discountCode, String owner,String totalPrice)async{
 
-      Either<Failuer,PaymentResponse> either = await repo.paymentOnline(token, discountCode, owner, totalPrice);
+      Either<Failuer,PaymentOnlineResponse> either = await repo.paymentOnline( discountCode, owner, totalPrice);
 
       return either.fold(
               (failure) => emit(BaseRequestErrorState(failure.errorMessage)),
-              (data) => emit(BaseRequestSuccessState<PaymentResponse>(data: data)));
+              (data) => emit(BaseRequestSuccessState<PaymentOnlineResponse>(data: data)));
     }
 
 

@@ -17,7 +17,7 @@ class MainViewModel extends Cubit {
   GetPlacesUseCase getPlacesUseCase;
    String token = "" ;
 
-  PaymentUseCase paymentUseCase;
+  PaymentOnlineUseCase paymentUseCase;
   int indexTab = SharedPreferenceGlobal.getData(key: "lastIndex")??0;
   List<Widget> screens=[
     const HomeScreen(),
@@ -33,8 +33,8 @@ class MainViewModel extends Cubit {
     indexTab = index;
   }
 
-  payment(token, discountCode, owner, totalPrice)async{
-     return paymentUseCase.execute(token, discountCode, owner, totalPrice);
+  payment(discountCode, owner, totalPrice)async{
+     return paymentUseCase.execute(discountCode, owner, totalPrice);
   }
 
   getToken()async{

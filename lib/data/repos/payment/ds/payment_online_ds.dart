@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
 import 'package:graduation_project/data/model/responses/payment/PaymentResponse.dart';
+import 'package:graduation_project/data/model/responses/payment/paymentOnlineResponse.dart';
 import 'package:graduation_project/data/utils/shared_utils.dart';
 import 'package:graduation_project/domain/repos/payment/ds/payment_online_ds.dart';
 import 'package:graduation_project/ui/utils/constants.dart';
@@ -18,11 +19,14 @@ class PaymentOnlineDSImpl extends  PaymentOnlineDS{
 
 
   @override
-  Future<Either<Failuer, PaymentResponse>> paymentOnline(String token , String discountCode , String owner , String totalPrice) async{
+  Future<Either<Failuer, PaymentOnlineResponse>> paymentOnline( String discountCode , String owner , String totalPrice) async{
+
+    String token = await SharedPrefsUtils().getToken()??"";
 
     final url = Uri.parse('https://${EndPoints.baseUrl}${EndPoints.onlinePayment}');
     final headers = {
       'authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
     };
     final body = json.encode({
       "code":discountCode,
@@ -30,18 +34,15 @@ class PaymentOnlineDSImpl extends  PaymentOnlineDS{
       "owner":owner
     });
   try{
-    var client = Client();
-    var request = Request('GET', url)
-      ..headers.addAll(headers)
-      ..body = body;
+
+    Response serverResponse = await post(
+        url,
+      headers: headers,
+      body: body
+    );
 
 
-
-    var streamedResponse = await client.send(request);
-    Response serverResponse = await Response.fromStream(streamedResponse);
-
-
-    PaymentResponse response = PaymentResponse.fromJson(jsonDecode(serverResponse.body));
+    PaymentOnlineResponse response = PaymentOnlineResponse.fromJson(jsonDecode(serverResponse.body));
 
 
     print("result is 000000 : ${serverResponse.body}");

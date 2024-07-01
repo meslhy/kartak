@@ -202,9 +202,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
           BlocBuilder(
             bloc: viewModel.getTransactionsUseCase,
             builder: (context, state) {
+              print("state is ....... : $state");
              if(state is BaseRequestSuccessState){
                print("state is ....... : $state");
+
                List<TransactionData> data = state.data;
+               print("state is ....... : ${data[0].owner}");
+
                if(data.isEmpty) {
                  return const Expanded(
                    child: Center(
@@ -224,19 +228,19 @@ class _TransactionScreenState extends State<TransactionScreen> {
                    itemBuilder: (context, index) {
                      return TransactionCard(
                        dataColor: dataColor,
-                       title: data[index].place!.name??"",
-                       cashBack: "${data[index].cashBack!}",
+                       title: data[index].place?.name??"",
+                       cashBack: data[index].cashBack.toString(),
                        date: data[index].createdAt!.substring(0,9),
                        payMethod: data[index].paymentTypeMethod!,
                        totalPrice: "${data[index].totalPrice}",
-                       totalPriceAfterDiscount: "${data[index].totalPriceAfterDiscount!}",
+                       totalPriceAfterDiscount: "${data[index].totalPriceAfterDiscount??0}",
                        imagUrl: data[index].place?.cloudImage?.url??"",
                      );
                    },
                  ),
                );
              }else if(state is BaseRequestErrorState){
-               return Expanded(child: Center(child: Text(state.message),));
+               return Expanded(child: Center(child: Text(state.message,style: TextStyle(color: AppColors.white),),));
              }else{
                return Expanded(child: Center(child: LoadingWidget(),));
              }

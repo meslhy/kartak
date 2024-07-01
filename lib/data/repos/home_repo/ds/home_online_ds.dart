@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
+import 'package:graduation_project/data/model/responses/comments/PlaceComentsResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/placeDetailsResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/data/utils/shared_utils.dart';
@@ -83,6 +84,22 @@ class HomeOnlineDSImpl extends HomeOnlineDS{
     }
   }catch(e,ee){
     return left(Failuer(Constants.defaultErrorMessage));
+  }
+  }
+
+  @override
+  Future<Either<Failuer, PlaceCommentsResponse>> getPlaceComments(String id) async{
+  try{
+    Uri url = Uri.parse("https://${EndPoints.baseUrl}${EndPoints.placeComments}/$id");
+    Response serverResponse = await get(url);
+    PlaceCommentsResponse response = PlaceCommentsResponse.fromJson(jsonDecode(serverResponse.body));
+    if(serverResponse.statusCode >= 200 && serverResponse.statusCode < 300){
+      return right(response);
+    }else{
+      return left(Failuer(response.message??Constants.defaultErrorMessage));
+    }
+  }catch(e,ee){
+    return left(Failuer(e.toString()));
   }
   }
 
