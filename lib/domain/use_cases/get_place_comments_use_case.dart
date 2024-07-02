@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
-import 'package:graduation_project/data/model/responses/comments/PlaceComentsResponse.dart';
+import 'package:graduation_project/data/model/responses/comments/PlaceCommentsResponse.dart';
 import 'package:graduation_project/domain/repos/home_repo/home_repo.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
 import 'package:injectable/injectable.dart';

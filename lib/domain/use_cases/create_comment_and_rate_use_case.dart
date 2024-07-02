@@ -13,11 +13,12 @@ class CreateCommentAndRateUseCase extends Cubit{
 
 
   execute(String userID,String placeID,String comment,String rate)async{
+    emit(BaseRequestLoadingState());
     Either either = await homeRepo.createCommentAndRate(userID, placeID, comment, rate);
 
     either.fold(
             (failure) => emit(BaseRequestErrorState(failure.errorMessage)),
-            (data) => BaseRequestSuccessState(),
+            (data) => emit(BaseRequestSuccessState()),
     );
   }
 

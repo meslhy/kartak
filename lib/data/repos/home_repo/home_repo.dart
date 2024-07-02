@@ -1,7 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
 import 'package:graduation_project/data/model/failures.dart';
-import 'package:graduation_project/data/model/responses/comments/PlaceComentsResponse.dart';
+import 'package:graduation_project/data/model/responses/comments/PlaceCommentsResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/placeDetailsResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/domain/repos/home_repo/ds/home_online_ds.dart';

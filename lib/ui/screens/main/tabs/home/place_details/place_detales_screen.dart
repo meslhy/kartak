@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:graduation_project/data/model/responses/comments/PlaceComentsResponse.dart';
+import 'package:graduation_project/data/model/responses/comments/PlaceCommentsResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/placeDetailsResponse.dart';
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/domain/di/di.dart';
@@ -251,7 +251,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
               children: [
 
                 if (comments.isNotEmpty) _buildReviewItem(comments[0]) ,
-                if (comments.isNotEmpty) _buildReviewItem(comments[1]),
+                if (comments.isNotEmpty && comments.length>1) _buildReviewItem(comments[1]),
                 if (comments.isNotEmpty) Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.all(20),
@@ -271,9 +271,22 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Expanded(
-                                    child: ListView.builder(
-                                      itemBuilder:(context, index) => _buildReviewItem(comments[index]),
-                                      itemCount: comments.length??0,
+                                    child: BlocBuilder(
+                                      bloc: viewModel.getPlaceCommentsUseCase,
+                                      builder:(context, state) {
+
+                                        if(state is BaseRequestSuccessState){
+                                          List<PlaceCommentData> bottomSheetComments = state.data!.data;
+                                          return  ListView.builder(
+                                            itemBuilder:(context, index) => _buildReviewItem(bottomSheetComments[index]),
+                                            itemCount: comments.length??0,
+                                          );
+                                        }else if(state is BaseRequestErrorState){
+                                          return ErrorView(message: state.message);
+                                        }else{
+                                          return LoadingWidget();
+                                        }
+                                      },
                                     ),
                                   ),
                                   Padding(
@@ -281,11 +294,16 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                                     child: BlocConsumer(
                                         bloc: viewModel.createCommentAndRateUseCase,
                                         listener: (context, state) {
+                                          print(state);
                                           if(state is BaseRequestLoadingState)
                                           {
                                             showLoading(context);
                                           }else if (state is BaseRequestSuccessState){
                                             print("donnnnnnnne");
+                                            viewModel.commentController.clear();
+                                            viewModel.rateController.clear();
+                                            Navigator.pop(context);
+                                            viewModel.getPlaceComments(widget.idOfPlace);
                                           }else if (state is BaseRequestErrorState){
                                             Navigator.pop(context);
                                             showErrorDialog(context, state.message);
@@ -328,7 +346,6 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                                                 onPressed: (){
                                                   viewModel.createCommentAndRate(widget.idOfPlace);
                                                   viewModel.getPlaceComments(widget.idOfPlace);
-                                                  Navigator.pop(context);
 
                                                 },
                                                 icon: const Icon(Icons.add),
@@ -387,9 +404,9 @@ class _PlaceDetailsState extends State<PlaceDetails> {
           ),
           child:  Row(
             children: [
-              const CircleAvatar(
+               CircleAvatar(
                 backgroundImage: NetworkImage(
-                    'https://qph.cf2.quoracdn.net/main-qimg-31cce1e286ed4fbbf03e40b8993f294a-lq'), // Rep// lace with actual user image
+                    comment.user?.cloudImage?.url??""), // Rep// lace with actual user image
                 radius: 22,
               ),
               const SizedBox(width: 10),
@@ -397,8 +414,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Yasin Badr',
+                     Text(
+                      comment.user?.name??"",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
