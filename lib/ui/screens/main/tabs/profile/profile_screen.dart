@@ -63,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
          print(state );
           if(state is BaseRequestSuccessState){
              data = state.data;
-             role ="admin";
+             role =data.role??"user";
             return SingleChildScrollView(
                 child: Container(
                   color: Colors.white,

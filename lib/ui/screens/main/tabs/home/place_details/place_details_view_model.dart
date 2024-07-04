@@ -39,4 +39,15 @@ class PlaceDetailsViewModel extends Cubit {
     return getPlaceCommentsUseCase.execute(id);
   }
 
+  canSendComment(){
+    if(commentController.text.isEmpty && rateController.text.isEmpty){
+      emit(CanNotSend());
+    }else{
+      emit(CanSend());
+    }
+  }
+
 }
+
+class CanSend {}
+class CanNotSend {}

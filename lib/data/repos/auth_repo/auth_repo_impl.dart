@@ -62,7 +62,7 @@ class AuthRepoImpl extends AuthRepo {
     }catch(e,ee){
         print(e);
         print(ee);
-        return left(Failuer(Constants.defaultErrorMessage));
+        return left(Failuer(e.toString()??Constants.defaultErrorMessage));
       }
       } else {
       return Left(Failuer(Constants.internetErrorMessage));

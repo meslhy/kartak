@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/data/model/responses/places_response/places_response.dart';
 import 'package:graduation_project/domain/di/di.dart';
+import 'package:graduation_project/shared_locale/helper.dart';
 import 'package:graduation_project/ui/screens/main/tabs/home/place_details/place_detales_screen.dart';
 import 'package:graduation_project/ui/utils/app_colors.dart';
 import 'package:graduation_project/ui/utils/base_request_states.dart';
@@ -29,8 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -48,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(80),
                         image: DecorationImage(
-                            image: NetworkImage(state.data!.data!.cloudImage!.url??"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/813px-Unknown_person.jpg"), fit: BoxFit.cover)),
+                            image: NetworkImage(state.data?.data?.cloudImage?.url??"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/813px-Unknown_person.jpg"), fit: BoxFit.cover)),
                     margin: const EdgeInsets.only(left: 20 ,bottom: 10,top: 10),
                   );
                 }else{
@@ -103,12 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }else if (state is BaseRequestErrorState){
                     return  Center(child: ErrorView(message:state.message ?? Constants.defaultErrorMessage));
                 }else{
-
-                      if(viewModel.allPlacesCached.data == null){
                         return Center(child: LoadingWidget());
-                      }else{
-                        return buildListOfPlaces(context,viewModel.allPlacesCached.data!);
-                      }
 
                     }
                   }
@@ -159,8 +153,8 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                  place.slug??"",
-                 style: TextStyle(
-                   color:AppColors.white,
+                 style: const TextStyle(
+                   color:AppColors.black,
                    fontWeight: FontWeight.bold,
                    fontSize: 18,
                  ),
@@ -168,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 2,),
                 Text(
                   place.categore??"",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color.fromARGB(255, 114, 114, 114),
                     fontSize: 12,
                   ),
@@ -178,17 +172,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     place.description??"",
                     maxLines: 2,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color.fromARGB(255, 114, 114, 114),
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
                 ),
-                IconButton(
-                  padding: const EdgeInsets.only(right: 25),
-                  icon: const Icon(Icons.favorite_outline, color: Colors.black ,size: 20,),
-                  onPressed: () {},
-                ),
+
               ],
             ),
           ),

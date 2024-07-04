@@ -19,9 +19,12 @@ class ScanQRScreen extends StatelessWidget {
       body:Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
+
         children: [
-          SizedBox(
-            width:50,
+          Container(
+            width:MediaQuery.of(context).size.width *0.8,
+            height: 50,
+            margin: EdgeInsets.all(20),
             child: ElevatedButton(
                 onPressed: (){
                   viewModel.scanQR(context);
@@ -32,7 +35,7 @@ class ScanQRScreen extends StatelessWidget {
                 child:const Text(
                     "Scan Again",
                   style: TextStyle(
-                    color: AppColors.primary
+                    color: AppColors.white
                   ),
                 ),
             ),

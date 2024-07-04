@@ -42,28 +42,27 @@ class _MainScreenState extends State<MainScreen> {
           return Future.value(true);
         }
       },
-      child: Stack(
-        children: [
-          // Container(
-          //     width: double.infinity,
-          //     height: 100,
-          //     decoration: BoxDecoration(
-          //         image:DecorationImage(
-          //           image: AssetImage(
-          //             AppAssets.bg,
-          //
-          //           ),
-          //
-          //         )
-          //
-          //     )
-          // ),
-          Scaffold(
-            backgroundColor: AppColors.transparent,
-            body: currentScreen,
-            bottomNavigationBar:navBar() ,
-          ),
-        ],
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                    image:DecorationImage(
+                      image: AssetImage(
+                        AppAssets.bg,
+
+                      ),
+
+                    )
+
+                )
+            ),
+            currentScreen,
+          ],
+        ),
+        bottomNavigationBar:navBar() ,
       ),
     );
   }

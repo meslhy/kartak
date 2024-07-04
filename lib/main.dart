@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         ScanQRScreen.routeName :(context) =>  ScanQRScreen(),
         AddPlaceScreen.routeName :(context) =>  AddPlaceScreen(),
       },
-      initialRoute:LoginScreen.routeName,
+      initialRoute:SplashScreen.routeName,
     );
   }
 }

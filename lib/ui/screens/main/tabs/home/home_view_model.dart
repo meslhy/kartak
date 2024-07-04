@@ -15,8 +15,6 @@ import '../../../../utils/app_colors.dart';
 @injectable
 class HomeViewModel extends Cubit{
   AuthResponse? currentUser;
-
-  PlaceResponse allPlacesCached = PlaceResponse.fromJson(jsonDecode(SharedPreferenceGlobal.getDataString(key: "allPlaces")??""));
   GetPlacesUseCase getPlacesUseCase;
   HomeViewModel(this.getPlacesUseCase) : super(BaseRequestInitialState());
 
@@ -34,8 +32,8 @@ class HomeViewModel extends Cubit{
       builder:(_) {
         return  AlertDialog(
           content:Container(
-            height: MediaQuery.of(context).size.height * .1,
-            width: MediaQuery.of(context).size.width * .5,
+            height: MediaQuery.of(context).size.height * .15,
+            width: MediaQuery.of(context).size.width * .7,
             child: Column(
               children: [
                 const Text(
@@ -46,7 +44,7 @@ class HomeViewModel extends Cubit{
                 ),
                 const Spacer(),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: ElevatedButton(
@@ -57,7 +55,7 @@ class HomeViewModel extends Cubit{
                         child:const Text("Cancel",style: TextStyle(fontSize: 18),),
                       ),
                     ),
-                    SizedBox(width: 5,),
+                    const SizedBox(width: 10,),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: (){

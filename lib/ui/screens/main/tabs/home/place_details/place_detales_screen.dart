@@ -94,7 +94,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                         ),
                       ],
                     ),
-                    describtion(fixedColor , place.description ??""),
+                    describtion(fixedColor , place),
                     reviewsSection(fixedColor),
                     ratingSection(fixedColor,place.rate?.toDouble()??0,place.ratingQuantity??0),
                     reviewsCommentList(fixedColor,context),
@@ -132,7 +132,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
           name,
           style: TextStyle(
             color: fixedColor,
-            fontSize: 24,
+            fontSize: MediaQuery.of(context).size.width *0.05,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -161,18 +161,18 @@ class _PlaceDetailsState extends State<PlaceDetails> {
     );
   }
 
-  Widget describtion(Color fixedColor , String category) {
+  Widget describtion(Color fixedColor ,PlaceDetailsData  place) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           HeadlineTextWidget(
-            text: category,
+            text: place.categore??"",
           ),
           Container(
             margin: const EdgeInsets.only(left: 10),
-            child: _buildDescription(category),
+            child: _buildDescription(place.description??""),
           ),
         ],
       ),
@@ -226,7 +226,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
             ),
              Text(
               'Total Rates: $totalRates',
-              style: TextStyle(fontSize: 10),
+              style: const TextStyle(fontSize: 10),
             ),
           ],
         ),
@@ -253,8 +253,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                 if (comments.isNotEmpty) _buildReviewItem(comments[0]) ,
                 if (comments.isNotEmpty && comments.length>1) _buildReviewItem(comments[1]),
                 if (comments.isNotEmpty) Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(20),
         ),
                   InkWell(
                   onTap: (){
@@ -344,11 +344,16 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                                               ),
                                               IconButton(
                                                 onPressed: (){
-                                                  viewModel.createCommentAndRate(widget.idOfPlace);
-                                                  viewModel.getPlaceComments(widget.idOfPlace);
+                                                  if(viewModel.commentController.text.isEmpty || viewModel.rateController.text.isEmpty ){
+                                                   return;
+                                                  }else{
+                                                    viewModel.createCommentAndRate(widget.idOfPlace);
+                                                    viewModel.getPlaceComments(widget.idOfPlace);
+                                                  }
+
 
                                                 },
-                                                icon: const Icon(Icons.add),
+                                                icon:  const Icon(Icons.send_outlined , color: Colors.grey,),
                                               ),
                                             ],
                                           );
@@ -371,7 +376,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                       color: AppColors.black,
                       borderRadius:  BorderRadius.circular(14),
                     ),
-                    child: const Text("Comment",style: TextStyle(color: AppColors.white,fontWeight: FontWeight.bold,fontSize: 22),),
+                    child: const Text("Comment",style: TextStyle(color: AppColors.white,fontWeight: FontWeight.bold,fontSize: 20),),
                   ),
                 ),
               ],
@@ -381,8 +386,8 @@ class _PlaceDetailsState extends State<PlaceDetails> {
           return ErrorView(message: state.message);
         }else{
           return Container(
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(20),
           );
         }
 
@@ -416,7 +421,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                   children: [
                      Text(
                       comment.user?.name??"",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -483,9 +488,9 @@ class _PlaceDetailsState extends State<PlaceDetails> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text(
+                title:  Text(
                   'Choose Payment Method',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: MediaQuery.of(context).size.width *0.05, fontWeight: FontWeight.w500),
                 ),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -506,12 +511,14 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                           Icons.credit_card,
                           color: Color.fromRGBO(227, 163, 22, 1),
                         ), // Card icon
-                        label: const Text('Card Payment',
+                        label:  Text('Card Payment',
                             style: TextStyle(
-                                color: Color.fromRGBO(227, 163, 22, 1))),
+                                color: const Color.fromRGBO(227, 163, 22, 1),
+                              fontSize: MediaQuery.of(context).size.width *0.05
+                            )),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color.fromARGB(
-                              255, 0, 0, 0), // Background color
+                              255, 0, 0, 0), // Backg// round color
                         ),
                       ),
                     ),
@@ -531,9 +538,11 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                           Icons.attach_money,
                           color: Color.fromRGBO(227, 163, 22, 1),
                         ), // Card icon
-                        label: const Text('Cash Payment',
+                        label:  Text('Cash Payment',
                             style: TextStyle(
-                                color: Color.fromRGBO(227, 163, 22, 1))),
+                                color: const Color.fromRGBO(227, 163, 22, 1),
+                              fontSize: MediaQuery.of(context).size.width *0.05,
+                            )),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color.fromARGB(
                               255, 0, 0, 0), // Background color
@@ -556,7 +565,7 @@ class _PlaceDetailsState extends State<PlaceDetails> {
           ),
           child: const Text(
             'Apply Discount',
-            style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),
           ),
         ),
       ),

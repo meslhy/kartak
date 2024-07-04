@@ -59,7 +59,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   margin:
                   const EdgeInsets.only(top: 20, left: 30, right: 30, bottom: 40),
                   decoration: BoxDecoration(
-                    color: const Color.fromRGBO(250, 250, 250, .5),
+                    color: const Color.fromRGBO(0, 0, 0, 0.6),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Container(
